@@ -1,8 +1,10 @@
-﻿using System;
+﻿using PurrNet;
+using Cinemachine;
+using System;
 using UnityEngine;
 
 [RequireComponent(typeof(CharacterController))]
-public class PlayerController : MonoBehaviour
+public class PlayerController : NetworkBehaviour
 {
     [Header("Movement Settings")]
     [SerializeField] private float moveSpeed = 5f;
@@ -16,11 +18,20 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float maxLookAngle = 80f;
 
     [Header("References")]
-    [SerializeField] private Camera playerCamera;
+    [SerializeField] private CinemachineVirtualCamera playerCamera;
 
     private CharacterController characterController;
     private Vector3 velocity;
     private float verticalRotation = 0f;
+
+    protected override void OnSpawned()
+    {
+        base.OnSpawned();
+
+        enabled = isOwner; // Enable the script only for the local player
+
+        playerCamera.gameObject.SetActive(isOwner); // Activate the camera only for the local player
+    }
 
     // ─────────────────────────────────────────
     // Unity Events
