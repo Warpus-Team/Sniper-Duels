@@ -19,6 +19,7 @@ public class PlayerController : NetworkBehaviour
 
     [Header("References")]
     [SerializeField] private CinemachineVirtualCamera playerCamera;
+    [SerializeField] private NetworkAnimator animator;
 
     private CharacterController characterController;
     private Vector3 velocity;
@@ -87,6 +88,10 @@ public class PlayerController : NetworkBehaviour
 
         velocity.y += gravity * Time.deltaTime;
         characterController.Move(velocity * Time.deltaTime);
+
+        //Handle animations
+        animator.SetFloat("Forward", vertical);
+        animator.SetFloat("Sideways", horizontal);
     }
 
     private void HandleRotation() // Look rotation logic: Mouse input handling, clamping vertical rotation, and applying rotations to the camera and player
