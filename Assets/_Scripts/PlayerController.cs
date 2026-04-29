@@ -93,6 +93,7 @@ public class PlayerController : NetworkBehaviour
         //Debug.Log($"Vertical: {vertical}. Horizontal: {horizontal}");
         animator.SetFloat("Forward", vertical);
         animator.SetFloat("Sideways", horizontal);
+        animator.SetFloat("Jump", velocity.y);
     }
 
     private void HandleRotation() // Look rotation logic: Mouse input handling, clamping vertical rotation, and applying rotations to the camera and player
