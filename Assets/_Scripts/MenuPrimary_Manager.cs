@@ -8,6 +8,12 @@ public class MenuPrimary_Manager : MonoBehaviour
     [SerializeField] private GameObject PanelMenu;
     [SerializeField] private GameObject PanelOptions;
     [SerializeField] private GameObject PanelCredits;
+    [SerializeField] private string scenaNamePlay;
+    
+    public void LoadSceneGameplay() //Mudar para a cena de jogo
+    {
+        SceneManager.LoadScene(scenaNamePlay);
+    }
 
     public void OpenOptions(){
         PanelMenu.SetActive(false);
