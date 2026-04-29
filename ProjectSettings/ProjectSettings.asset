@@ -294,7 +294,14 @@ PlayerSettings:
   AndroidMinifyDebug: 0
   AndroidValidateAppBundleSize: 1
   AndroidAppBundleSizeToValidate: 150
-  m_BuildTargetIcons: []
+  m_BuildTargetIcons:
+  - m_BuildTarget: 
+    m_Icons:
+    - serializedVersion: 2
+      m_Icon: {fileID: 2800000, guid: 323b4f1f603231447a57f4547e6a6ce0, type: 3}
+      m_Width: 128
+      m_Height: 128
+      m_Kind: 0
   m_BuildTargetPlatformIcons:
   - m_BuildTarget: iPhone
     m_Icons:
@@ -926,11 +933,11 @@ PlayerSettings:
   apiCompatibilityLevel: 6
   activeInputHandler: 0
   windowsGamepadBackendHint: 0
-  cloudProjectId: 73609795-da26-47e9-a4e5-ba57365e184e
+  cloudProjectId: 10382fef-b679-4bff-97c8-46d12b80571c
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
-  projectName: Spider 1x1
-  organizationId: mayconisacdasilva
+  projectName: Sniper-Duels
+  organizationId: warpus-team
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0
   hmiLoadingImage: {fileID: 0}
