@@ -1,5 +1,10 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Resources.meta
+guid: 0e4caa6f0166d0a43a1395bbcd601486
+folderAsset: yes
+========
 guid: cf29728d19bb1ce4dbe71cb6f7538c12
+>>>>>>>> 6976408f304df6849f220be76c534a9ec9f250e1:Assets/Jogo.unity.meta
 DefaultImporter:
   externalObjects: {}
   userData: 
