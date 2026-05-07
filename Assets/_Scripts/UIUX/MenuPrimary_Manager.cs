@@ -5,6 +5,8 @@ using UnityEngine.SceneManagement;
 
 public class MenuPrimary_Manager : MonoBehaviour
 {
+
+    //GameObject References
     [SerializeField] private GameObject PanelMenu;
     [SerializeField] private GameObject PanelOptions;
     [SerializeField] private GameObject PanelCredits;
@@ -13,57 +15,77 @@ public class MenuPrimary_Manager : MonoBehaviour
     [SerializeField] private GameObject PanelPJoin;
     [SerializeField] private GameObject PanelPNickname;
 
-//////////// Play Scene
-    public void OpenPlay(){
+    //Variables and Constants
+    [SerializeField] private string sceneNamePlay;
+
+    //////////// Play Scene
+    public void OpenPlay()
+    {
         PanelMenu.SetActive(false);
         PanelPlay.SetActive(true);
     }
-        public void ClosePlay(){
+    public void ClosePlay()
+    {
         PanelPlay.SetActive(false);
         PanelMenu.SetActive(true);
     }
+    public void LoadGameplay()
+    {
+        SceneManager.LoadScene(sceneNamePlay);
+    }
 
-//////////// Multiplayer Scenes
-    public void OpenPCreate(){
+    //////////// Multiplayer Scenes
+    public void OpenPCreate()
+    {
         PanelPCreate.SetActive(true);
     }
-    public void ClosePCreate(){
+    public void ClosePCreate()
+    {
         PanelPCreate.SetActive(false);
     }
-    public void OpenPJoin(){
+    public void OpenPJoin()
+    {
         PanelPJoin.SetActive(true);
     }
-    public void ClosePJoin(){
+    public void ClosePJoin()
+    {
         PanelPJoin.SetActive(false);
     }
 
-//////////// Player Configuration Scenes
-    
-    public void OpenPNickname(){
+    //////////// Player Configuration Scenes
+
+    public void OpenPNickname()
+    {
         PanelPNickname.SetActive(true);
     }
-    public void ClosePNickname(){
+    public void ClosePNickname()
+    {
         PanelPNickname.SetActive(false);
     }
-    public void OpenOptions(){
+    public void OpenOptions()
+    {
         PanelMenu.SetActive(false);
         PanelOptions.SetActive(true);
     }
-    public void CloseOptions(){
+    public void CloseOptions()
+    {
         PanelOptions.SetActive(false);
         PanelMenu.SetActive(true);
     }
 
-    public void OpenCredits(){
+    public void OpenCredits()
+    {
         PanelMenu.SetActive(false);
         PanelCredits.SetActive(true);
     }
-    public void CloseCredits(){
+    public void CloseCredits()
+    {
         PanelCredits.SetActive(false);
         PanelMenu.SetActive(true);
     }
 
-    public void Exit(){
+    public void Exit()
+    {
         Application.Quit();
     }
 }
