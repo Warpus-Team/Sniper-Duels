@@ -252,6 +252,9 @@ MonoBehaviour:
   maxLookAngle: 80
   playerCamera: {fileID: 7691955102212479079}
   animator: {fileID: 5827557501630538637}
+  renderers:
+  - {fileID: 3091672133592810844}
+  - {fileID: 1637859059892067171}
 --- !u!114 &2641326524969593753
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -372,6 +375,12 @@ Animator:
     type: 3}
   m_PrefabInstance: {fileID: 257620933661058637}
   m_PrefabAsset: {fileID: 0}
+--- !u!137 &1637859059892067171 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 1524918160910187822, guid: fce5eb4bdb35ced4bb80338521368254,
+    type: 3}
+  m_PrefabInstance: {fileID: 257620933661058637}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2854445955188089274 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2598092816686712823, guid: fce5eb4bdb35ced4bb80338521368254,
@@ -403,6 +412,12 @@ MonoBehaviour:
   _ownerAuth: 1
   _autoSyncParameters: 0
   _dontSyncParameters: []
+--- !u!137 &3091672133592810844 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 2987174850286871313, guid: fce5eb4bdb35ced4bb80338521368254,
+    type: 3}
+  m_PrefabInstance: {fileID: 257620933661058637}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &3231007095184243456 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3406294763768077645, guid: fce5eb4bdb35ced4bb80338521368254,

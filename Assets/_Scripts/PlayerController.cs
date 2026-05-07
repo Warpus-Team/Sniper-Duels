@@ -2,6 +2,9 @@
 using Cinemachine;
 using System;
 using UnityEngine;
+using NUnit.Framework;
+using UnityEngine.Rendering;
+using System.Collections.Generic;
 
 [RequireComponent(typeof(CharacterController))]
 public class PlayerController : NetworkBehaviour
@@ -20,6 +23,7 @@ public class PlayerController : NetworkBehaviour
     [Header("References")]
     [SerializeField] private CinemachineVirtualCamera playerCamera;
     [SerializeField] private NetworkAnimator animator;
+    [SerializeField] private List<Renderer> renderers = new();
 
     private CharacterController characterController;
     private Vector3 velocity;
@@ -32,8 +36,16 @@ public class PlayerController : NetworkBehaviour
         enabled = isOwner; // Enable the script only for the local player
 
         playerCamera.gameObject.SetActive(isOwner); // Activate the camera only for the local player
-    }
 
+        if (isOwner)
+        {
+            foreach (var rend in renderers)
+            {
+                rend.shadowCastingMode = ShadowCastingMode.ShadowsOnly;
+            }
+
+        }
+    }
     // ─────────────────────────────────────────
     // Unity Events
     // ─────────────────────────────────────────
