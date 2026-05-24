@@ -14,7 +14,7 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/_Scenes/Mapa1.unity
     guid: 130de191e9bf7de41a659f68e5741ed0
-  - enabled: 0
+  - enabled: 1
     path: Assets/_Scenes/MapaTeste.unity
     guid: 7c7bec45a59de13409f28204dceddb83
   m_configObjects: {}

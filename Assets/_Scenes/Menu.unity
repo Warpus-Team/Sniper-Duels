@@ -5511,7 +5511,7 @@ MonoBehaviour:
   PanelPCreate: {fileID: 1493799287}
   PanelPJoin: {fileID: 331734383}
   PanelPNickname: {fileID: 0}
-  sceneNamePlay: Mapa3D
+  sceneNamePlay: MapaTeste
 --- !u!1 &1556908218
 GameObject:
   m_ObjectHideFlags: 0

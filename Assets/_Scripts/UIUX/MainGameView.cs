@@ -16,15 +16,9 @@ public class MainGameView : View
         InstanceHandler.UnregisterInstance<MainGameView>();
     }
 
-    public override void OnHide()
-    {
+    public override void OnHide() {  }
 
-    }
-
-    public override void OnShow()
-    {
-
-    }
+    public override void OnShow() {  }
 
     public void UpdateHealth(int health)
     {
