@@ -16,6 +16,21 @@ public class PlayerHealth : NetworkBehaviour
 
         var actualLayer = isOwner ? selfLayer : otherLayer;
         SetLayerRecursive(gameObject, actualLayer);
+
+        if (isOwner)
+            health.onChanged += OnHealthChanged;
+    }
+
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+
+        health.onChanged -= OnHealthChanged;
+    }
+
+    private void OnHealthChanged(int newHealth)
+    {
+        InstanceHandler.GetInstance<MainGameView>().UpdateHealth(newHealth);
     }
 
     private void SetLayerRecursive(GameObject obj, int layer)
@@ -32,5 +47,10 @@ public class PlayerHealth : NetworkBehaviour
     public void ChangeHealth(int amount)
     {
         health.value += amount;
+
+        if(health.value <= 0)
+        {
+            Destroy(gameObject);
+        }
     }
 }

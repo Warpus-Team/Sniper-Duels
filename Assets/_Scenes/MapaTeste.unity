@@ -674,6 +674,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canvasGroup: {fileID: 1063549465}
+  heatlhText: {fileID: 1179437667}
 --- !u!1 &1171895764
 GameObject:
   m_ObjectHideFlags: 0
