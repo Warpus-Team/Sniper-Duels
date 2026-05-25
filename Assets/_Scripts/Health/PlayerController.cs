@@ -28,6 +28,7 @@ public class PlayerController : NetworkBehaviour
     private CharacterController characterController;
     private Vector3 velocity;
     private float verticalRotation = 0f;
+    private bool isCursorLocked = true;
 
     protected override void OnSpawned()
     {
@@ -53,9 +54,8 @@ public class PlayerController : NetworkBehaviour
     private void Start()
     {
         characterController = GetComponent<CharacterController>();
-        
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+
+        LockCursor();
 
         if (playerCamera == null)
         {
@@ -66,6 +66,10 @@ public class PlayerController : NetworkBehaviour
 
     private void Update()
     {
+        HandleCursorInput();
+
+        if (!isCursorLocked) return;
+
         HandleMovement();
         HandleRotation();
     }
@@ -128,6 +132,32 @@ public class PlayerController : NetworkBehaviour
             Vector3.down, 
             groundCheckDistance
         );
+    }
+
+    private void HandleCursorInput()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            UnlockCursor();
+        }
+
+        if (Input.GetMouseButtonDown(0) && !isCursorLocked)
+        {
+            LockCursor();
+        }
+    }
+    private void LockCursor()
+    {
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+        isCursorLocked = true;
+    }
+
+    private void UnlockCursor()
+    {
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+        isCursorLocked = false;
     }
 
 #if UNITY_EDITOR
