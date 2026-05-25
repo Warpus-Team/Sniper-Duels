@@ -17,6 +17,15 @@ public class PlayerSpawnState : StateNode
             return;
         }
 
+        DespawnPlayers();
+
+        var spawnedPlayers = SpawningPlayers();
+
+        machine.Next(spawnedPlayers);
+    }
+
+    private List<PlayerHealth> SpawningPlayers() 
+    { 
         var spawnedPlayers = new List<PlayerHealth>();
 
         int currentSpawnIndex = 0;
@@ -38,7 +47,17 @@ public class PlayerSpawnState : StateNode
             }
         }
 
-        machine.Next(spawnedPlayers);
+        return spawnedPlayers;
+    }
+
+    private void DespawnPlayers()
+    {
+        var allPlayers = FindObjectsByType<PlayerHealth>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+
+        foreach (var player in allPlayers)
+        {
+            Destroy(player.gameObject);
+        }
     }
 
     public override void Exit(bool asServer)

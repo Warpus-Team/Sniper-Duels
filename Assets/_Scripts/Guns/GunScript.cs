@@ -28,6 +28,5 @@ public class GunScript : NetworkBehaviour
             return;
 
         playerHealth.ChangeHealth(-damage);
-        Debug.Log($"Hit: {hit.transform.name}");
     }
 }

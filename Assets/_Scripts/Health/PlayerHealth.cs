@@ -9,7 +9,7 @@ public class PlayerHealth : NetworkBehaviour
     [SerializeField] private SyncVar<int> health = new(100);
     [SerializeField] private int selfLayer, otherLayer;
 
-    public Action<PlayerHealth> OnDeath_Server;
+    public Action<PlayerID> OnDeath_Server;
 
     public int Health => health;
 
@@ -21,7 +21,10 @@ public class PlayerHealth : NetworkBehaviour
         SetLayerRecursive(gameObject, actualLayer);
 
         if (isOwner)
+        {
+            InstanceHandler.GetInstance<MainGameView>().UpdateHealth(health.value);
             health.onChanged += OnHealthChanged;
+        }
     }
 
     protected override void OnDestroy()
@@ -53,7 +56,7 @@ public class PlayerHealth : NetworkBehaviour
 
         if(health.value <= 0)
         {
-            OnDeath_Server?.Invoke(this);
+            OnDeath_Server?.Invoke(owner.Value);
             Destroy(gameObject);
         }
     }
