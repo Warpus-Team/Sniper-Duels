@@ -17,13 +17,19 @@ public class PlayerSpawnState : StateNode
             return;
         }
 
+        var spawnedPlayers = new List<PlayerHealth>();
+
         int currentSpawnIndex = 0;
 
         foreach (var player in networkManager.players)
         {
             var spawnPoint = spawnPoints[currentSpawnIndex];
             var newPlayer = Instantiate(playerPrefab, spawnPoint.position, spawnPoint.rotation);
+            
             newPlayer.GiveOwnership(player);
+            
+            spawnedPlayers.Add(newPlayer);
+
             currentSpawnIndex++;
 
             if (currentSpawnIndex >= spawnPoints.Count)
@@ -32,7 +38,7 @@ public class PlayerSpawnState : StateNode
             }
         }
 
-        //machine.Next();
+        machine.Next(spawnedPlayers);
     }
 
     public override void Exit(bool asServer)

@@ -1,4 +1,5 @@
 using PurrNet;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,6 +8,8 @@ public class PlayerHealth : NetworkBehaviour
 {
     [SerializeField] private SyncVar<int> health = new(100);
     [SerializeField] private int selfLayer, otherLayer;
+
+    public Action<PlayerHealth> OnDeath_Server;
 
     public int Health => health;
 
@@ -50,6 +53,7 @@ public class PlayerHealth : NetworkBehaviour
 
         if(health.value <= 0)
         {
+            OnDeath_Server?.Invoke(this);
             Destroy(gameObject);
         }
     }

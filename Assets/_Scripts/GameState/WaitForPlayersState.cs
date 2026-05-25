@@ -1,18 +1,22 @@
+using PurrNet.StateMachine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
-public class WaitForPlayersState : MonoBehaviour
+public class WaitForPlayersState : StateNode
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] private int minplayers = 2;
+    
+    public override void Enter(bool asServer)
     {
-        
+        base.Enter(asServer);
+        StartCoroutine(WaitForPlayers());
     }
-
-    // Update is called once per frame
-    void Update()
+    private IEnumerator WaitForPlayers()
     {
-        
+        while (networkManager.players.Count < minplayers)
+            yield return null;
+        machine.Next();
     }
 }
