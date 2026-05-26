@@ -37,15 +37,7 @@ public class RoundRunningState : StateNode<List<PlayerHealth>>
 
         if (_players.Count <= 1)
         {
-            if (_players.Count == 1) 
-            { 
-                machine.Next(_players[0]);
-            }
-            else
-            {
-                machine.Next();
-            }
-
+            machine.Next();
         }
     }
 }

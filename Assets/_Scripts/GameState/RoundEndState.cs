@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RoundEndState : StateNode<PlayerID>
+public class RoundEndState : StateNode
 {
     [SerializeField] private int amountOfRounds = 3;
     [SerializeField] private StateNode spawningState;
@@ -12,34 +12,14 @@ public class RoundEndState : StateNode<PlayerID>
     private int _roundCount = 0;
     private WaitForSeconds _daley = new(3f);
 
-    private Dictionary<PlayerID, int> _roundWins = new();
-
-    override public void Enter(bool asServer)
-    {
-        base.Enter(asServer);
-        if (!asServer)
-            return;
-       
-        Debug.Log("Round Ended with no winner");
-
-        CheckForGameEnd();
-    }
-
-    public override void Enter(PlayerID winner, bool asServer)
+    public override void Enter(bool asServer)
     {
         base.Enter(asServer);
 
         if(!asServer)
             return;
 
-        if (!_roundWins.ContainsKey(winner))
-        {
-            _roundWins.Add(winner, 0);
-        }
-
-        _roundWins[winner]++;
-
-        Debug.Log($"Round Winner: {winner}");
+        Debug.Log("Round Ended with no winner");
 
         CheckForGameEnd();
 
@@ -51,7 +31,7 @@ public class RoundEndState : StateNode<PlayerID>
 
         if (_roundCount >= amountOfRounds)
         {
-            machine.Next(_roundWins);
+            machine.Next();
             return;
         }
 
