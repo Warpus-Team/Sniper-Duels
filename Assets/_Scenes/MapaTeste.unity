@@ -315,7 +315,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Deths
+  m_text: 'Deaths
 
 '
   m_isRightToLeft: 0
@@ -565,6 +565,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canvasGroup: {fileID: 349143819}
+  scoreBoardEntriesParent: {fileID: 951272713}
+  scoreBoardEntryPrefab: {fileID: 2011794076145854694, guid: bbbc03d9fd4bd444abdb0d18f67e0a5c,
+    type: 3}
 --- !u!225 &349143819
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -935,8 +938,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -122.94998, y: 145.79996}
-  m_SizeDelta: {x: 245.9, y: 50}
+  m_AnchoredPosition: {x: -102.91989, y: 145.79996}
+  m_SizeDelta: {x: 205.8398, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &549299218
 MonoBehaviour:
@@ -1175,7 +1178,7 @@ GameObject:
   - component: {fileID: 951272713}
   - component: {fileID: 951272714}
   m_Layer: 5
-  m_Name: Centent
+  m_Name: Content
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1197,8 +1200,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -123.9}
-  m_SizeDelta: {x: 500, y: 460.2075}
+  m_AnchoredPosition: {x: 0, y: -96.898}
+  m_SizeDelta: {x: 500, y: 406.2}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &951272714
 MonoBehaviour:
@@ -1219,8 +1222,8 @@ MonoBehaviour:
     m_Bottom: 0
   m_ChildAlignment: 1
   m_Spacing: 0
-  m_ChildForceExpandWidth: 1
-  m_ChildForceExpandHeight: 1
+  m_ChildForceExpandWidth: 0
+  m_ChildForceExpandHeight: 0
   m_ChildControlWidth: 0
   m_ChildControlHeight: 0
   m_ChildScaleWidth: 0
@@ -1399,7 +1402,7 @@ MonoBehaviour:
   _directChildren: []
   _networkRules: {fileID: 0}
   _visitiblityRules: {fileID: 0}
-  Scores:
+  scores:
     _ownerAuth: 0
     _serializedDict:
       keys: []
@@ -1546,7 +1549,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1171895765
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2017,7 +2020,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1618485699}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -2449,8 +2452,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1618485700}
   - {fileID: 80007004}
+  - {fileID: 1618485700}
   - {fileID: 541086316}
   - {fileID: 1133467796}
   - {fileID: 1603934118}

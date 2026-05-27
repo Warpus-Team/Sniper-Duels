@@ -20,22 +20,6 @@ public class ScoreBoardView : View
         _gameViewManager = InstanceHandler.GetInstance<GameViewManager>();
     }
 
-    private void OnDestroy()
-    {
-        InstanceHandler.UnregisterInstance<ScoreBoardView>();
-    }
-
-    public void SetData(Dictionary<PlayerID, ScoreManager.ScoreData> data) 
-    {
-        foreach (var playerScore in data)
-        {
-            var entry = Instantiate(scoreBoardEntryPrefab, scoreBoardEntriesParent);
-            entry.SetData(playerScore.Key.id.ToString(), playerScore.Value.Kills, playerScore.Value.Deaths);
-        }
-    }
-
-
-
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Tab))
@@ -49,6 +33,25 @@ public class ScoreBoardView : View
         }
     }
 
+    private void OnDestroy()
+    {
+        InstanceHandler.UnregisterInstance<ScoreBoardView>();
+    }
+
+    public void SetData(Dictionary<PlayerID, ScoreManager.ScoreData> data) 
+    {
+        foreach (Transform child in scoreBoardEntriesParent.transform)
+        {
+            Destroy(child.gameObject);
+        }
+
+        foreach (var playerScore in data)
+        {
+            var entry = Instantiate(scoreBoardEntryPrefab, scoreBoardEntriesParent);
+            entry.SetData(playerScore.Key.id.ToString(), playerScore.Value.Kills, playerScore.Value.Deaths);
+        }
+    }
+
     public override void OnShow()
     {
     }
@@ -56,3 +59,4 @@ public class ScoreBoardView : View
     {
     }
 }
+   

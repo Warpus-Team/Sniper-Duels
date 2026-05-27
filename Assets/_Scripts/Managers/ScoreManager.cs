@@ -26,7 +26,7 @@ public class ScoreManager : NetworkBehaviour
 
     }
 
-    private void OnScoresChanged(SyncDictionary<PlayerID, ScoreData> changer)
+    private void OnScoresChanged(SyncDictionaryChange<PlayerID, ScoreData> changer)
     {
         if (InstanceHandler.TryGetInstance(out ScoreBoardView scoreBoardView))
         {
@@ -51,6 +51,25 @@ public class ScoreManager : NetworkBehaviour
         scoreData.Deaths++;
         scores[playerID] = scoreData;
     }
+
+
+    public PlayerID GetWinner()
+    {
+        PlayerID winner = default;
+
+        var highestKill = 0;
+
+        foreach (var score in scores)
+        {
+            if (score.Value.Kills > highestKill)
+            {
+                highestKill = score.Value.Kills;
+                winner = score.Key;
+            }
+        }
+        return winner;
+    }
+
 
     private void CheckForDictionaryEntry(PlayerID playerID) 
     {
