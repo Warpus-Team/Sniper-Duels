@@ -746,6 +746,7 @@ GameObject:
   - component: {fileID: 414799591}
   - component: {fileID: 414799593}
   - component: {fileID: 414799592}
+  - component: {fileID: 414799595}
   - component: {fileID: 414799594}
   m_Layer: 0
   m_Name: NetworkManager
@@ -812,7 +813,7 @@ MonoBehaviour:
   _startClientFlags: 7
   _cookieScope: 1
   _dontDestroyOnLoad: 0
-  _transport: {fileID: 414799592}
+  _transport: {fileID: 414799595}
   _networkPrefabs: {fileID: 11400000, guid: dddf299bb4740d94088f22649c8dd27e, type: 2}
   _networkAssets: {fileID: 0}
   _networkRules: {fileID: 11400000, guid: b3cc9b883bf37db4c95ae5b62c48ffc7, type: 2}
@@ -830,15 +831,35 @@ MonoBehaviour:
   m_GameObject: {fileID: 414799590}
   m_Enabled: 1
   m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef882a0e84c58df4885b0e1e59320b49, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  checkInterval: 0.33
+  placement: 1
+  _displayType: 3
+  _displayTarget: 6
+  fontSize: 13
+  textColor: {r: 1, g: 1, b: 1, a: 1}
+--- !u!114 &414799595
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 414799590}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 332e746c3c3253246aacad4d5559f1fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _masterServer: https://purrtransport.purrservers.com/
-  _roomName: cfccfca386084e399576a3a857aa8178
+  _roomName: PurrNetRulez
   _region: brazil
   _host: purrtransport-brazil.purrservers.com
   _timeoutInSeconds: 5
   _pollEventsInUpdate: 0
+  _useNat: 0
+  _natResolveTimeout: 8
   _networkSimulation:
     includeInBuild: 0
     simulateLatency: 0
@@ -1584,10 +1605,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a1081eb66d479c46813195fa146cf5b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  allViews:
-  - {fileID: 1063549466}
-  - {fileID: 349143818}
-  defaultView: {fileID: 1063549466}
 --- !u!114 &1022845124
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1805,7 +1822,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1171895765
 MonoBehaviour:
   m_ObjectHideFlags: 0
