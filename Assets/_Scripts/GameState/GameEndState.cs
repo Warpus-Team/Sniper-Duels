@@ -26,8 +26,22 @@ public class GameEndState : StateNode
             return;
         }
         
+        if (!InstanceHandler.TryGetInstance(out EndGameView endGameView))
+        {
+            Debug.Log("GameEndState failed to get end game view instance", this);
+            return;
+        }
 
-            Debug.Log($"Game has now ended witch {winner} as our winner chappio");
+        if (!InstanceHandler.TryGetInstance(out GameViewManager gameViewManager))
+        {
+            Debug.Log("GameEndState failed to get game view manager instance", this);
+            return;
+        }
+
+        endGameView.SetWinner(winner);
+        gameViewManager.ShowView<EndGameView>();
+
+        Debug.Log($"Game has now ended witch {winner} as our winner chappio");
 
     }
 }
