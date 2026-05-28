@@ -22,6 +22,11 @@ public class MainGameView : View
 
     public void UpdateHealth(int health)
     {
-        heatlhText.text = health.ToString();
+        if (health >= 100)
+            heatlhText.text = health.ToString() + "/100    ";
+        if (health < 100)
+            heatlhText.text = health.ToString() + "/100    ";
+        if (health < 10)
+            heatlhText.text = health.ToString() + "/100    ";
     }
 }
