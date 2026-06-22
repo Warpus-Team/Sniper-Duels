@@ -1,8 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using PurrNet;
-using Unity.VisualScripting;
 
 public class GameViewManager : MonoBehaviour
 {
@@ -11,20 +9,10 @@ public class GameViewManager : MonoBehaviour
 
     private void Awake()
     {
-        InstanceHandler.RegisterInstance(this);
-
         foreach (var view in allViews)
-        {
             HideViewInternal(view);
-        }
         ShowViewInternal(defaultView);
     }
-
-    private void OnDestroy()
-    {
-        InstanceHandler.UnregisterInstance<GameViewManager>();
-    }
-
 
     public void ShowView<T>(bool hideOthers = true) where T : View
     {
@@ -76,4 +64,3 @@ public abstract class View : MonoBehaviour
     public abstract void OnShow();
     public abstract void OnHide(); 
 }
-

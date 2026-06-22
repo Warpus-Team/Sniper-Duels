@@ -1,24 +1,16 @@
-using UnityEngine;
+﻿using UnityEngine;
 using TMPro;
-using PurrNet;
 
-public class MainGameView : View
+public class MainGameView : MonoBehaviour  // ← não herda mais de View
 {
+    public static MainGameView Instance { get; private set; } // ← singleton novo
+
     [SerializeField] private TMP_Text heatlhText;
 
     private void Awake()
     {
-        InstanceHandler.RegisterInstance(this);
+        Instance = this; // ← substitui InstanceHandler.RegisterInstance
     }
-
-    private void OnDestroy()
-    {
-        InstanceHandler.UnregisterInstance<MainGameView>();
-    }
-
-    public override void OnHide() {  }
-
-    public override void OnShow() {  }
 
     public void UpdateHealth(int health)
     {

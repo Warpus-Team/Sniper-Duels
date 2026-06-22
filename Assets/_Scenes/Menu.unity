@@ -5511,7 +5511,11 @@ MonoBehaviour:
   PanelPCreate: {fileID: 1493799287}
   PanelPJoin: {fileID: 331734383}
   PanelPNickname: {fileID: 0}
-  sceneNamePlay: MapaTeste
+  nicknameInput: {fileID: 0}
+  createRoomInput: {fileID: 0}
+  joinRoomInput: {fileID: 0}
+  statusText: {fileID: 0}
+  gameSceneName: TestePhoton
 --- !u!1 &1556908218
 GameObject:
   m_ObjectHideFlags: 0

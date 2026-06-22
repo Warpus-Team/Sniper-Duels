@@ -17,4 +17,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/_Scenes/MapaTeste.unity
     guid: 7c7bec45a59de13409f28204dceddb83
+  - enabled: 1
+    path: Assets/_Scenes/TestePhoton.unity
+    guid: 8892e238661477344bd164b558647585
   m_configObjects: {}

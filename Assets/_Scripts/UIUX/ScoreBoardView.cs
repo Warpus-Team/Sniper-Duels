@@ -1,62 +1,45 @@
-using PurrNet;
-using System.Collections;
-using System.Collections.Generic;
+using Photon.Pun;
 using UnityEngine;
 
-public class ScoreBoardView : View
+public class ScoreBoardView : MonoBehaviour
 {
-    [SerializeField] private Transform scoreBoardEntriesParent;
-    [SerializeField] private ScoreBoardEntry scoreBoardEntryPrefab;
+    public static ScoreBoardView Instance { get; private set; }
 
-    private GameViewManager _gameViewManager;
+    [SerializeField] private Transform entriesParent;
+    [SerializeField] private ScoreBoardEntry entryPrefab;
+    [SerializeField] private CanvasGroup canvasGroup;
 
     private void Awake()
     {
-        InstanceHandler.RegisterInstance(this);
-    }
-
-    private void Start()
-    {
-        _gameViewManager = InstanceHandler.GetInstance<GameViewManager>();
+        if (Instance != null) { Destroy(gameObject); return; }
+        Instance = this;
+        Hide(); // começa escondido
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Tab))
-        {
-            _gameViewManager.ShowView<ScoreBoardView>(false);
-        }
-
-        if (Input.GetKeyUp(KeyCode.Tab))
-        {
-            _gameViewManager.HideView<ScoreBoardView>();
-        }
+        // Mantém o mesmo comportamento de Tab do original
+        if (Input.GetKeyDown(KeyCode.Tab)) Show();
+        if (Input.GetKeyUp(KeyCode.Tab)) Hide();
     }
 
-    private void OnDestroy()
+    // Substitui SetData() — agora lê direto dos Players do Photon
+    public void Refresh()
     {
-        InstanceHandler.UnregisterInstance<ScoreBoardView>();
-    }
-
-    public void SetData(Dictionary<PlayerID, ScoreManager.ScoreData> data) 
-    {
-        foreach (Transform child in scoreBoardEntriesParent.transform)
-        {
+        foreach (Transform child in entriesParent)
             Destroy(child.gameObject);
-        }
 
-        foreach (var playerScore in data)
+        foreach (var player in PhotonNetwork.PlayerList)
         {
-            var entry = Instantiate(scoreBoardEntryPrefab, scoreBoardEntriesParent);
-            entry.SetData(playerScore.Key.id.ToString(), playerScore.Value.Kills, playerScore.Value.Deaths);
+            var entry = Instantiate(entryPrefab, entriesParent);
+            entry.SetData(
+                player.NickName,
+                ScoreManager.Instance.GetKills(player),
+                ScoreManager.Instance.GetDeaths(player)
+            );
         }
     }
 
-    public override void OnShow()
-    {
-    }
-    public override void OnHide()
-    {
-    }
+    public void Show() => canvasGroup.alpha = 1;
+    public void Hide() => canvasGroup.alpha = 0;
 }
-   

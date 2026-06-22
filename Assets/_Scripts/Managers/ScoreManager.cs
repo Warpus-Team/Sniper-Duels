@@ -1,93 +1,65 @@
-using PurrNet;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.Networking.Transport;
+﻿using Photon.Pun;
+using Photon.Realtime;
+using ExitGames.Client.Photon;
 using UnityEngine;
-using UnityEngine.SocialPlatforms.Impl;
 
-public class ScoreManager : NetworkBehaviour
+public class ScoreManager : MonoBehaviourPunCallbacks
 {
-    [SerializeField] private SyncDictionary<PlayerID, ScoreData> scores = new();
+    public static ScoreManager Instance { get; private set; }
+
+    // Substitui SyncDictionary — Custom Properties ficam em cada Player do Photon
+    private const string KEY_KILLS = "kills";
+    private const string KEY_DEATHS = "deaths";
 
     private void Awake()
     {
-        InstanceHandler.RegisterInstance(this);
-
-        scores.onChanged += OnScoresChanged; 
+        if (Instance != null) { Destroy(gameObject); return; }
+        Instance = this;
     }
 
-    protected override void OnDestroy()
+    // ─── Substitui AddKill(PlayerID) ───
+    public void AddKill(Player player)
     {
-        base.OnDestroy();
-
-        InstanceHandler.UnregisterInstance<ScoreManager>();
-
-        scores.onChanged -= OnScoresChanged;
-
+        int current = GetKills(player);
+        player.SetCustomProperties(new Hashtable { { KEY_KILLS, current + 1 } });
     }
 
-    private void OnScoresChanged(SyncDictionaryChange<PlayerID, ScoreData> changer)
+    public void AddDeath(Player player)
     {
-        if (InstanceHandler.TryGetInstance(out ScoreBoardView scoreBoardView))
+        int current = GetDeaths(player);
+        player.SetCustomProperties(new Hashtable { { KEY_DEATHS, current + 1 } });
+    }
+
+    public int GetKills(Player player)
+    {
+        if (player.CustomProperties.TryGetValue(KEY_KILLS, out object val))
+            return (int)val;
+        return 0;
+    }
+
+    public int GetDeaths(Player player)
+    {
+        if (player.CustomProperties.TryGetValue(KEY_DEATHS, out object val))
+            return (int)val;
+        return 0;
+    }
+
+    public Player GetWinner()
+    {
+        Player winner = null;
+        int topKills = -1;
+        foreach (Player p in PhotonNetwork.PlayerList)
         {
-            scoreBoardView.SetData(scores.ToDictionary());
-        }
-    }
-
-    public void AddKill(PlayerID playerID)
-    {
-        CheckForDictionaryEntry(playerID);
-
-        var scoreData = scores[playerID];
-        scoreData.Kills++;
-        scores[playerID] = scoreData;
-    }
-
-    public void AddDeath(PlayerID playerID)
-    {
-        CheckForDictionaryEntry(playerID);
-
-        var scoreData = scores[playerID];
-        scoreData.Deaths++;
-        scores[playerID] = scoreData;
-    }
-
-
-    public PlayerID GetWinner()
-    {
-        PlayerID winner = default;
-
-        var highestKill = 0;
-
-        foreach (var score in scores)
-        {
-            if (score.Value.Kills > highestKill)
-            {
-                highestKill = score.Value.Kills;
-                winner = score.Key;
-            }
+            int k = GetKills(p);
+            if (k > topKills) { topKills = k; winner = p; }
         }
         return winner;
     }
 
-
-    private void CheckForDictionaryEntry(PlayerID playerID) 
+    // Substitui scores.onChanged — Photon dispara em TODOS os clientes automaticamente
+    public override void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProps)
     {
-
-        if (!scores.ContainsKey(playerID))
-        {
-            scores.Add(playerID, new ScoreData());
-        }
-    }
-
-    public struct ScoreData
-    { 
-        public int Kills;
-        public int Deaths;
-
-        public override string ToString()
-        {
-            return $"{Kills}/{Deaths}";
-        }
+        if (changedProps.ContainsKey(KEY_KILLS) || changedProps.ContainsKey(KEY_DEATHS))
+            ScoreBoardView.Instance?.Refresh();
     }
 }
