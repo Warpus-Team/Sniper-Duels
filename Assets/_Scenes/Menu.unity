@@ -639,6 +639,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 83008810}
+  - component: {fileID: 83008811}
   m_Layer: 0
   m_Name: LobbyManager
   m_TagString: Untagged
@@ -661,6 +662,23 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1446102298}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &83008811
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 83008809}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7dcd311f5aaea9d408e68a2f464061f5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  nicknameInput: {fileID: 0}
+  createRoomInput: {fileID: 53764733}
+  joinRoomInput: {fileID: 288849656}
+  statusText: {fileID: 0}
+  gameSceneName: 
 --- !u!1 &83411883
 GameObject:
   m_ObjectHideFlags: 0
@@ -4310,7 +4328,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1535777305}
         m_TargetAssemblyTypeName: MenuPrimary_Manager, Assembly-CSharp
-        m_MethodName: LoadGameplay
+        m_MethodName: OpenPlay
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -5511,11 +5529,7 @@ MonoBehaviour:
   PanelPCreate: {fileID: 1493799287}
   PanelPJoin: {fileID: 331734383}
   PanelPNickname: {fileID: 0}
-  nicknameInput: {fileID: 0}
-  createRoomInput: {fileID: 0}
-  joinRoomInput: {fileID: 0}
-  statusText: {fileID: 0}
-  gameSceneName: TestePhoton
+  gameSceneName: '    '
 --- !u!1 &1556908218
 GameObject:
   m_ObjectHideFlags: 0
@@ -7406,7 +7420,7 @@ SceneRoots:
   m_Roots:
   - {fileID: 848755887}
   - {fileID: 1244469457}
-  - {fileID: 672031713}
   - {fileID: 1446102298}
+  - {fileID: 672031713}
   - {fileID: 1556908221}
   - {fileID: 1942783085}
