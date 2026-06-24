@@ -1,59 +1,99 @@
 ﻿using Photon.Pun;
 using Photon.Realtime;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class LobbyManager : MonoBehaviourPunCallbacks
 {
-    public static LobbyManager Instance;
+    public static LobbyManager Instance { get; private set; }
 
-    [Header("Campos")]
-    [SerializeField] private TMP_InputField nicknameInput;
+    [Header("Lista de Salas")]
+    [SerializeField] private Transform roomListParent;
+    [SerializeField] private RoomItemUI roomItemPrefab;
+
+    [Header("Criar Sala")]
     [SerializeField] private TMP_InputField createRoomInput;
-    [SerializeField] private TMP_InputField joinRoomInput;
 
-    [Header("Status")]
-    [SerializeField] private TMP_Text statusText;
+    [Header("Entrar por Código")]
+    [SerializeField] private TMP_InputField joinCodeInput;
 
+    [Header("Painel de Código (visível para quem criou)")]
+    [SerializeField] private GameObject painelCodigoSala;
+    [SerializeField] private TMP_Text codigoSalaText;
+
+    [Header("Configurações")]
     [SerializeField] private string gameSceneName;
+
+    //[Header("Status")]
+    //[SerializeField] private TMP_Text statusText;
+
+    private List<GameObject> _roomItems = new();
 
     private void Awake()
     {
+        if (Instance != null) { Destroy(gameObject); return; }
         Instance = this;
     }
 
     private void Start()
     {
         PhotonNetwork.AutomaticallySyncScene = true;
+        painelCodigoSala?.SetActive(false);
 
         if (!PhotonNetwork.IsConnected)
-        {
-            SetStatus("Conectando...");
             PhotonNetwork.ConnectUsingSettings();
-        }
+
     }
+
+    // ─────────────────────────────────────────
+    // Callbacks Photon
+    // ─────────────────────────────────────────
 
     public override void OnConnectedToMaster()
     {
         PhotonNetwork.JoinLobby();
-        SetStatus("Conectado!");
+    }
+
+    public override void OnRoomListUpdate(List<RoomInfo> roomList)
+    {
+        foreach (var obj in _roomItems)
+            Destroy(obj);
+        _roomItems.Clear();
+
+        foreach (var room in roomList)
+        {
+            if (room.RemovedFromList) continue;
+
+            var item = Instantiate(roomItemPrefab, roomListParent);
+            item.Setup(room);
+            _roomItems.Add(item.gameObject);
+        }
+    }
+
+    public override void OnCreatedRoom()
+    {
+        // Exibe o código da sala para quem criou
+        string codigo = PhotonNetwork.CurrentRoom.Name;
+        painelCodigoSala?.SetActive(true);
+
+        if (codigoSalaText != null)
+            codigoSalaText.text = codigo;
+
+        Debug.Log($"[Lobby] Sala criada. Código: {codigo}");
     }
 
     public override void OnJoinedRoom()
     {
-        SetStatus(
-            $"Na sala: {PhotonNetwork.CurrentRoom.Name} " +
-            $"({PhotonNetwork.CurrentRoom.PlayerCount}/2)"
-        );
+        int playerCount = PhotonNetwork.CurrentRoom.PlayerCount;
+        PhotonNetwork.NickName = playerCount == 1 ? "Player A" : "Player B";
+
+        Debug.Log($"[Lobby] Entrou como {PhotonNetwork.NickName}");
     }
 
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
-        SetStatus(
-            $"{newPlayer.NickName} entrou. " +
-            $"{PhotonNetwork.CurrentRoom.PlayerCount}/2"
-        );
+        Debug.Log("[Lobby] Player B entrou. Iniciando...");
 
         if (PhotonNetwork.IsMasterClient &&
             PhotonNetwork.CurrentRoom.PlayerCount >= 2)
@@ -63,62 +103,80 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     }
 
     public override void OnJoinRoomFailed(short returnCode, string message)
-    {
-        SetStatus($"Erro ao entrar: {message}");
-    }
+        => Debug.LogWarning($"[Lobby] Erro ao entrar: {message}");
 
     public override void OnCreateRoomFailed(short returnCode, string message)
-    {
-        SetStatus($"Erro ao criar sala: {message}");
-    }
+        => Debug.LogWarning($"[Lobby] Erro ao criar: {message}");
 
     public override void OnLeftRoom()
     {
-        SceneManager.LoadScene("MainMenu");
+        painelCodigoSala?.SetActive(false);
+        Debug.Log("[Lobby] Saiu da sala.");
     }
 
-    public void ConfirmNickname()
-    {
-        string nick = nicknameInput.text.Trim();
-
-        if (string.IsNullOrEmpty(nick))
-            return;
-
-        PhotonNetwork.NickName = nick;
-    }
+    // ─────────────────────────────────────────
+    // Botões da UI
+    // ─────────────────────────────────────────
 
     public void CreateRoom()
     {
-        string roomName = createRoomInput.text.Trim();
+        // Usa o campo de texto ou gera código aleatório
+        string codigo = createRoomInput != null
+            ? createRoomInput.text.Trim().ToUpper()
+            : GerarCodigo();
 
-        if (string.IsNullOrEmpty(roomName))
-            return;
+        if (string.IsNullOrEmpty(codigo))
+            codigo = GerarCodigo();
 
-        PhotonNetwork.CreateRoom(
-            roomName,
-            new RoomOptions { MaxPlayers = 2 }
-        );
+        PhotonNetwork.NickName = "Player A";
 
-        SetStatus($"Criando sala '{roomName}'...");
+        PhotonNetwork.CreateRoom(codigo, new RoomOptions
+        {
+            MaxPlayers = 2,
+            IsVisible = true,
+            IsOpen = true
+        });
+
+        Debug.Log($"[Lobby] Criando sala com código: {codigo}");
     }
 
-    public void JoinRoom()
+    // Entrar pelo código digitado manualmente
+    public void JoinByCode()
     {
-        string roomName = joinRoomInput.text.Trim();
+        if (joinCodeInput == null) return;
 
-        if (string.IsNullOrEmpty(roomName))
-            return;
+        string codigo = joinCodeInput.text.Trim().ToUpper();
+        if (string.IsNullOrEmpty(codigo)) return;
 
-        PhotonNetwork.JoinRoom(roomName);
+        PhotonNetwork.NickName = "Player B";
+        PhotonNetwork.JoinRoom(codigo);
 
-        SetStatus($"Entrando em '{roomName}'...");
+        Debug.Log($"[Lobby] Entrando pelo código: {codigo}");
     }
 
-    private void SetStatus(string msg)
+    public void LeaveRoom()
     {
-        if (statusText != null)
-            statusText.text = msg;
-
-        Debug.Log($"[Lobby] {msg}");
+        PhotonNetwork.LeaveRoom();
     }
+
+    // ─────────────────────────────────────────
+    // Utilitário
+    // ─────────────────────────────────────────
+
+    // Gera código no formato: PALAVRA-NÚMERO ex: SALA-4821
+    private string GerarCodigo()
+    {
+        string[] prefixos = { "SALA", "DUELO", "ARENA", "MIRA", "SNIPER" };
+        string prefixo = prefixos[Random.Range(0, prefixos.Length)];
+        int numero = Random.Range(1000, 9999);
+        return $"{prefixo}-{numero}";
+    }
+
+    //private void SetStatus(string msg)
+    //{
+    //    if (statusText != null)
+    //        statusText.text = msg;
+
+        //Debug.Log($"[Lobby] {msg}");
+    //}
 }

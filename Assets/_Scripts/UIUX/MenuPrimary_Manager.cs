@@ -15,7 +15,7 @@ public class MenuPrimary_Manager : MonoBehaviourPunCallbacks
     [SerializeField] private GameObject PanelPJoin;
     [SerializeField] private GameObject PanelPNickname;
 
-    [SerializeField] private string gameSceneName;
+    //[SerializeField] private string gameSceneName;
 
     public void LoadGameplay()
     {
@@ -24,16 +24,23 @@ public class MenuPrimary_Manager : MonoBehaviourPunCallbacks
 
     public void OpenPlay() { PanelMenu.SetActive(false); PanelPlay.SetActive(true); }
     public void ClosePlay() { PanelMenu.SetActive(true); PanelPlay.SetActive(false); }
+
+
     public void OpenPCreate() => PanelPCreate.SetActive(true);
     public void ClosePCreate() => PanelPCreate.SetActive(false);
+
+
     public void OpenPJoin() => PanelPJoin.SetActive(true);
     public void ClosePJoin() => PanelPJoin.SetActive(false);
-    public void OpenPNickname() => PanelPNickname.SetActive(true);
-    public void ClosePNickname() => PanelPNickname.SetActive(false);
+
+
     public void OpenOptions() { PanelMenu.SetActive(false); PanelOptions.SetActive(true); }
     public void CloseOptions() { PanelOptions.SetActive(false); PanelMenu.SetActive(true); }
+    
+
     public void OpenCredits() { PanelMenu.SetActive(false); PanelCredits.SetActive(true); }
     public void CloseCredits() { PanelCredits.SetActive(false); PanelMenu.SetActive(true); }
-    public void Exit() => Application.Quit();
+    
 
+    public void Exit() => Application.Quit();
 }

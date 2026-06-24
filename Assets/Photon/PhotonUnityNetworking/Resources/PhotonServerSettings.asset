@@ -42,5 +42,5 @@ MonoBehaviour:
   - RPC_ChangeHealth
   - RPC_NotifyDeath
   DisableAutoOpenWizard: 1
-  ShowSettings: 0
+  ShowSettings: 1
   DevRegionSetOnce: 0
