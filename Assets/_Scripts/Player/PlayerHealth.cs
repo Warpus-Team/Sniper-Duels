@@ -27,7 +27,7 @@ public class PlayerHealth : MonoBehaviourPun, IPunObservable
         SetLayerRecursive(gameObject, layer);
 
         if (photonView.IsMine)
-            MainGameView.Instance?.UpdateHealth(_health);
+            MainGameView.Instance?.UpdateHealth(_health, maxHealth);
     }
 
     // ─────────────────────────────────────────
@@ -52,7 +52,7 @@ public class PlayerHealth : MonoBehaviourPun, IPunObservable
         _health = Mathf.Clamp(_health, 0, maxHealth);
 
         // Atualiza HUD (roda no dono do player, é seguro)
-        MainGameView.Instance?.UpdateHealth(_health);
+        MainGameView.Instance?.UpdateHealth(_health, maxHealth);
 
         if (_health <= 0)
             Die(killerActorNumber);
@@ -99,7 +99,7 @@ public class PlayerHealth : MonoBehaviourPun, IPunObservable
         gameObject.SetActive(true);
 
         if (photonView.IsMine)
-            MainGameView.Instance?.UpdateHealth(_health);
+            MainGameView.Instance?.UpdateHealth(_health, maxHealth);
     }
 
     // ─────────────────────────────────────────
