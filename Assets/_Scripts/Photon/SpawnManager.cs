@@ -25,9 +25,12 @@ public class SpawnManager : MonoBehaviourPunCallbacks
         //SpawnLocalPlayer();
     }
 
-    public override void OnJoinedRoom()
+    public override void OnEnable()
     {
-        SpawnLocalPlayer();
+        base.OnEnable(); // ← chama o OnEnable original do Photon também
+
+        if (PhotonNetwork.InRoom)
+            SpawnLocalPlayer();
     }
 
 

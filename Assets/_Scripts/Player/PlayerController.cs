@@ -4,6 +4,7 @@ using Cinemachine;
 using UnityEngine;
 using UnityEngine.Rendering;
 using System.Collections.Generic;
+using System.Collections;
 
 [RequireComponent(typeof(CharacterController))]
 public class PlayerController : MonoBehaviourPun  // ← era NetworkBehaviour
@@ -116,6 +117,7 @@ public class PlayerController : MonoBehaviourPun  // ← era NetworkBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         _isCursorLocked = true;
+        StartCoroutine(ForceLock());
     }
 
     private void UnlockCursor()
@@ -123,6 +125,14 @@ public class PlayerController : MonoBehaviourPun  // ← era NetworkBehaviour
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
         _isCursorLocked = false;
+    }
+
+    private IEnumerator ForceLock()
+    {
+        yield return null;
+
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
 #if UNITY_EDITOR

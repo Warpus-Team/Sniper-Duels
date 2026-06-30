@@ -7,7 +7,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 {
     public static NetworkManager Instance { get; private set; }
 
-    [SerializeField] private string battleSceneName = "BattleScene";
+    [SerializeField] private string battleSceneName;
 
     private void Awake()
     {

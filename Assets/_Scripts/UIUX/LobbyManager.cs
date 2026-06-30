@@ -89,6 +89,10 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         PhotonNetwork.NickName = playerCount == 1 ? "Player A" : "Player B";
 
         Debug.Log($"[Lobby] Entrou como {PhotonNetwork.NickName}");
+
+        // ← ADICIONAR ISTO TEMPORARIAMENTE PARA TESTE COM 1 JOGADOR
+        //if (PhotonNetwork.IsMasterClient)
+        //    PhotonNetwork.LoadLevel(gameSceneName);
     }
 
     public override void OnPlayerEnteredRoom(Player newPlayer)
@@ -120,6 +124,13 @@ public class LobbyManager : MonoBehaviourPunCallbacks
 
     public void CreateRoom()
     {
+
+        if (PhotonNetwork.InRoom)
+        {
+            PhotonNetwork.LeaveRoom();
+            return;
+        }
+
         // Usa o campo de texto ou gera código aleatório
         string codigo = createRoomInput != null
             ? createRoomInput.text.Trim().ToUpper()
