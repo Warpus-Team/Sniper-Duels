@@ -10,7 +10,7 @@ public class SpawnManager : MonoBehaviourPunCallbacks
     [SerializeField] private Transform[] spawnPoints;
 
     [Header("Nome do prefab (deve estar em Assets/Resources/)")]
-    [SerializeField] private string playerPrefabName = "Player";
+    [SerializeField] private string playerPrefabName;
 
     private PlayerHealth _localPlayer;
 
