@@ -39,6 +39,9 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     private void Start()
     {
         PhotonNetwork.AutomaticallySyncScene = true;
+
+        Debug.Log("[Lobby] Start chamado, conectando...");
+
         painelCodigoSala?.SetActive(false);
 
         if (!PhotonNetwork.IsConnected)
@@ -52,6 +55,8 @@ public class LobbyManager : MonoBehaviourPunCallbacks
 
     public override void OnConnectedToMaster()
     {
+        Debug.Log("[Lobby] Conectado ao Master!");
+
         PhotonNetwork.JoinLobby();
     }
 
@@ -75,6 +80,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     {
         // Exibe o código da sala para quem criou
         string codigo = PhotonNetwork.CurrentRoom.Name;
+        
         painelCodigoSala?.SetActive(true);
 
         if (codigoSalaText != null)
@@ -85,6 +91,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom()
     {
+
         int playerCount = PhotonNetwork.CurrentRoom.PlayerCount;
         PhotonNetwork.NickName = playerCount == 1 ? "Player A" : "Player B";
 
@@ -104,6 +111,11 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         {
             PhotonNetwork.LoadLevel(gameSceneName);
         }
+    }
+
+    public override void OnJoinedLobby()
+    {
+        Debug.Log("[Lobby] Entrou no Lobby! Pronto para criar/entrar.");
     }
 
     public override void OnJoinRoomFailed(short returnCode, string message)

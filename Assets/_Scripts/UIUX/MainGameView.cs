@@ -1,8 +1,9 @@
-﻿using UnityEngine;
-using UnityEngine.UI;
+﻿using Photon.Pun;
 using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
 
-public class MainGameView : MonoBehaviour  // ← não herda mais de View
+public class MainGameView : MonoBehaviourPun  // ← não herda mais de View
 {
     public static MainGameView Instance { get; private set; } // ← singleton novo
 
@@ -12,10 +13,26 @@ public class MainGameView : MonoBehaviour  // ← não herda mais de View
     [Header("Configuracoes da Barrar")]
     [SerializeField] private Slider healthSlider;
 
+    [Header("Canvas")]
+    [SerializeField] private GameObject canvasRoot;
 
     private void Awake()
     {
-        Instance = this; // ← substitui InstanceHandler.RegisterInstance
+        Debug.Log($"[MainGameView] IsMine: {photonView.IsMine} | CanvasRoot: {canvasRoot}");
+
+        // Cada player agora tem seu próprio Canvas dentro do prefab
+        if (photonView.IsMine)
+        {
+            Instance = this;
+            if (canvasRoot != null)
+                canvasRoot.SetActive(true);
+        }
+        else
+        {
+            // Esconde o HUD dos outros jogadores
+            if (canvasRoot != null)
+                canvasRoot.SetActive(false);
+        }
     }
 
     public void UpdateHealth(int currentHealth, int maxHealth)

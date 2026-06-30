@@ -72,7 +72,44 @@ public class PlayerHealth : MonoBehaviourPun, IPunObservable
             killerActorNumber
         );
 
-        gameObject.SetActive(false);
+        photonView.RPC(nameof(RPC_HideBody), RpcTarget.All);
+
+        if (photonView.IsMine) // Desativa movimento e tiro
+        {
+            var controller = GetComponent<PlayerController>();
+            if (controller != null) controller.enabled = false;
+
+            var gun = GetComponent<GunScript>();
+            if (gun != null) gun.enabled = false;
+        }
+
+        // Esconde o corpo visual (todos os clientes veem isso)
+        HideBody();
+
+    }
+
+    private void HideBody()
+    {
+        // Esconde os renderers do modelo (Swat), sem desativar o GameObject inteiro
+        var renderers = GetComponentsInChildren<Renderer>();
+        foreach (var r in renderers)
+            r.enabled = false;
+    }
+
+    [PunRPC]
+    private void RPC_HideBody()
+    {
+        var renderers = GetComponentsInChildren<Renderer>();
+        foreach (var r in renderers)
+            r.enabled = false;
+    }
+
+    [PunRPC]
+    private void RPC_ShowBody()
+    {
+        var renderers = GetComponentsInChildren<Renderer>();
+        foreach (var r in renderers)
+            r.enabled = true;
     }
 
     [PunRPC]
@@ -96,10 +133,21 @@ public class PlayerHealth : MonoBehaviourPun, IPunObservable
     public void Respawn()
     {
         _health = maxHealth;
-        gameObject.SetActive(true);
 
+        // RPC já reativa os renderers em TODOS os clientes, incluindo o seu
+        photonView.RPC(nameof(RPC_ShowBody), RpcTarget.All);
+
+        // Reativa movimento e tiro — só local, pois só o dono controla
         if (photonView.IsMine)
+        {
+            var controller = GetComponent<PlayerController>();
+            if (controller != null) controller.enabled = true;
+
+            var gun = GetComponent<GunScript>();
+            if (gun != null) gun.enabled = true;
+
             MainGameView.Instance?.UpdateHealth(_health, maxHealth);
+        }
     }
 
     // ─────────────────────────────────────────
