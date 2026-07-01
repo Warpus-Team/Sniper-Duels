@@ -200,7 +200,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: ENTRER
+  m_text: ENTRE
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 45614032da62df84e8fb810b68dc4a76, type: 2}
   m_sharedMaterial: {fileID: -2900023310306358955, guid: 45614032da62df84e8fb810b68dc4a76,

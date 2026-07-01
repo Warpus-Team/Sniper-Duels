@@ -136,8 +136,13 @@ public class GameManager : MonoBehaviourPunCallbacks
         }
 
         // Respawna os dois jogadores via RPC para garantir sincronização
-        photonView.RPC(nameof(RPC_RespawnAll), RpcTarget.All);
-
+        if (photonView != null) {
+            photonView.RPC(nameof(RPC_RespawnAll), RpcTarget.All);
+        }
+        else {
+            RPC_RespawnAll(); // fallback local
+        }
+        
         yield return new WaitForSeconds(_roundEndDelay);
 
         StartCoroutine(StartRoundRoutine());
@@ -203,7 +208,14 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public override void OnMasterClientSwitched(Player newMasterClient)
     {
-        if (PhotonNetwork.IsMasterClient)
-            Debug.Log("[Game] Novo MasterClient assumiu o controle.");
+        if (!PhotonNetwork.IsMasterClient) return;
+
+        Debug.Log("[Game] Novo MasterClient assumiu. Reiniciando controle...");
+
+        if (CurrentState == GameState.RoundRunning)
+        {
+            _roundEnding = false;
+            RegisterAlivePlayers();
+        }
     }
 }
