@@ -22,7 +22,6 @@ public class RoundResultUI : MonoBehaviour
         gameEndPanel.SetActive(false);
     }
 
-    // Chamado pelo GameManager via OnRoomPropertiesUpdate
     public void UpdateState(GameManager.GameState state, int round)
     {
         switch (state)
@@ -42,7 +41,6 @@ public class RoundResultUI : MonoBehaviour
         }
     }
 
-    // Chamado pelo GameManager.AnnounceWinner()
     public void ShowGameEnd(string winnerName)
     {
         gameEndPanel.SetActive(true);

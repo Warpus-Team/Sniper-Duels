@@ -27,6 +27,9 @@ public class GameManager : MonoBehaviourPunCallbacks
     private List<PlayerHealth> _alivePlayers = new();
     private int _currentRound = 0;
 
+    // ← flag para evitar EndRound duplicado
+    private bool _roundEnding = false;
+
     public GameState CurrentState { get; private set; } = GameState.WaitForPlayers;
 
     private void Awake()
@@ -37,8 +40,10 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     private void Start()
     {
-        if (PhotonNetwork.IsMasterClient)
-            StartCoroutine(StartRoundRoutine());
+        // Apenas o MasterClient controla o fluxo de rodadas
+        if (!PhotonNetwork.IsMasterClient) return;
+        
+        StartCoroutine(StartRoundRoutine());
     }
 
     // ─────────────────────────────────────────
@@ -47,11 +52,14 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     private IEnumerator StartRoundRoutine()
     {
+        _roundEnding = false;
         _currentRound++;
+
+        Debug.Log($"[Game] Iniciando rodada {_currentRound}...");
+
         SetState(GameState.RoundRunning, _currentRound);
 
-        // Aguarda um frame para os players já existirem na cena
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(2f);
 
         RegisterAlivePlayers();
 
@@ -66,6 +74,8 @@ public class GameManager : MonoBehaviourPunCallbacks
             FindObjectsInactive.Exclude,
             FindObjectsSortMode.None
         );
+
+        Debug.Log($"[Game] RegisterAlivePlayers encontrou: {allPlayers.Length} players");
 
         foreach (var p in allPlayers)
         {
@@ -82,6 +92,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     public void OnPlayerDied(Player deadPlayer)
     {
         if (!PhotonNetwork.IsMasterClient) return;
+        if (_roundEnding) return;
 
         _alivePlayers.RemoveAll(h =>
             h.photonView.Owner != null &&
@@ -89,8 +100,10 @@ public class GameManager : MonoBehaviourPunCallbacks
 
         Debug.Log($"[Game] {deadPlayer.NickName} morreu. Vivos: {_alivePlayers.Count}");
 
-        if (_alivePlayers.Count <= 1)
+        if (_alivePlayers.Count <= 1) { 
+            _roundEnding = true;
             StartCoroutine(EndRoundRoutine());
+        }
     }
 
     // ─────────────────────────────────────────
@@ -99,29 +112,46 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     private IEnumerator EndRoundRoutine()
     {
+        var _roundEndDelay = 1f;
+
         SetState(GameState.RoundEnd, _currentRound);
 
+        // Identifica o vencedor da rodada
         if (_alivePlayers.Count == 1)
         {
-            var winner = _alivePlayers[0].photonView.Owner;
-            ScoreManager.Instance?.AddKill(winner);
-            Debug.Log($"[Game] {winner.NickName} venceu a rodada {_currentRound}.");
-        }
-
-        if (_currentRound >= totalRounds)
-        {
-            yield return new WaitForSeconds(roundEndDelay);
-            SetState(GameState.GameEnd, _currentRound);
-            AnnounceWinner();
-            yield break;
+            var roundWinner = _alivePlayers[0].photonView.Owner;
+            ScoreManager.Instance?.AddKill(roundWinner);
+            Debug.Log($"[Game] {roundWinner.NickName} venceu a rodada {_currentRound}.");
         }
 
         yield return new WaitForSeconds(roundEndDelay);
 
-        // Respawna todos via SpawnManager
-        SpawnManager.Instance?.RespawnLocalPlayer();
+        // Verifica se o jogo acabou ANTES de respawnar
+        if (_currentRound >= totalRounds)
+        {
+            SetState(GameState.GameEnd, _currentRound);
+            yield return new WaitForSeconds(_roundEndDelay);
+            AnnounceWinner();
+            yield break;
+        }
+
+        // Respawna os dois jogadores via RPC para garantir sincronização
+        photonView.RPC(nameof(RPC_RespawnAll), RpcTarget.All);
+
+        yield return new WaitForSeconds(_roundEndDelay);
 
         StartCoroutine(StartRoundRoutine());
+    }
+
+    // ─────────────────────────────────────────
+    // Respawn sincronizado — roda em TODOS os clientes
+    // ─────────────────────────────────────────
+
+    [PunRPC]
+    private void RPC_RespawnAll()
+    {
+        SpawnManager.Instance?.RespawnLocalPlayer();
+        Debug.Log("[Game] RespawnAll executado.");
     }
 
     // ─────────────────────────────────────────

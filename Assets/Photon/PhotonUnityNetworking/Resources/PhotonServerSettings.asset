@@ -43,6 +43,7 @@ MonoBehaviour:
   - RPC_NotifyDeath
   - RPC_HideBody
   - RPC_ShowBody
+  - RPC_RespawnAll
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 0
