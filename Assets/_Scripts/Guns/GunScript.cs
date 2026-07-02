@@ -2,19 +2,19 @@ using Photon.Pun;
 using UnityEngine;
 
 public class GunScript : MonoBehaviourPun
-{ 
+{
     [Header("Stats")]
     [SerializeField] private float range = 20f;
     [SerializeField] private int damage = 10;
     [SerializeField] private float fireRate = 0.5f;
 
     [Header("References")]
-    [SerializeField] private Transform cameraTransform;
+    [SerializeField] private Transform cameraTransform; // Mantido para saber a direção do olhar
+    [SerializeField] private Transform muzzleTransform; // NOVO: A ponta do cano da arma
     [SerializeField] private LayerMask hitLayer;
     [SerializeField] private ParticleSystem muzzleFlash;
 
     private float _lastFireTime;
-
 
     private void Start()
     {
@@ -31,28 +31,17 @@ public class GunScript : MonoBehaviourPun
 
         _lastFireTime = Time.unscaledTime;
 
+        // O RPC continua funcionando perfeitamente porque o script está no mesmo objeto do PhotonView
         photonView.RPC(nameof(RPC_PlayShotEffect), RpcTarget.All);
 
-        // 1. VISUAL DEBUG: Desenha uma linha vermelha na aba "Scene" que dura 0.5 segundos
-        Debug.DrawRay(cameraTransform.position, cameraTransform.forward * range, Color.red, 0.5f);
+        Debug.DrawRay(muzzleTransform.position, cameraTransform.forward * range, Color.red, 0.5f);
 
-        if (!Physics.Raycast(cameraTransform.position, cameraTransform.forward, out var hit, range, hitLayer))
-        {
-            // 3. CONSOLE DEBUG: O raio não bateu em nada (errou o alvo ou fora do alcance)
-            Debug.LogWarning($"<b>[{gameObject.name}]</b> O tiro foi disparado, mas não atingiu nada dentro do alcance de {range}m.");
+        // Executa o Raycast físico usando os mesmos parâmetros do Debug acima
+        if (!Physics.Raycast(muzzleTransform.position, cameraTransform.forward, out var hit, range, hitLayer))
             return;
-        }
-
-        // 4. CONSOLE DEBUG: O raio colidiu com alguma coisa na Layer configurada
-        Debug.Log($"<b>[{gameObject.name}]</b> O raio atingiu o objeto: <color=yellow>{hit.transform.name}</color> na coordenada {hit.point}.");
 
         if (!hit.transform.TryGetComponent<PlayerHealth>(out var playerHealth))
-        {
             return;
-        }
-
-        // 6. CONSOLE DEBUG: Sucesso total! Acertou um inimigo válido
-        Debug.Log($"<color=green><b>[SUCESSO]</b></color> <b>[{gameObject.name}]</b> Acertou o jogador {hit.transform.name}! Aplicando {-damage} de vida.");
 
         playerHealth.ChangeHealth(-damage);
     }

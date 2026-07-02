@@ -117,15 +117,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00f95478ee4987948826d09d610ad4d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _isSetup: 0
-  _prefabId: -2147483648
-  _componentIndex: -2147483648
-  _shouldBePooled: 0
-  _parent: {fileID: 0}
-  _invertedPathToNearestParent: 
-  _directChildren: []
-  _networkRules: {fileID: 0}
-  _visitiblityRules: {fileID: 0}
   mimicObject: {fileID: 2163256163081114567}
 --- !u!1 &5972036823240216489
 GameObject:
@@ -336,6 +327,7 @@ MonoBehaviour:
   damage: 10
   fireRate: 1
   cameraTransform: {fileID: 2163256163081114567}
+  muzzleTransform: {fileID: 6390559914057841238}
   hitLayer:
     serializedVersion: 2
     m_Bits: 183
@@ -362,7 +354,7 @@ MonoBehaviour:
   - {fileID: 2543693734726362416}
   - {fileID: 1751158352797490461}
   - {fileID: 8984374363353267408}
-  - {fileID: 0}
+  - {fileID: 8050088687194644045}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
@@ -382,6 +374,37 @@ MonoBehaviour:
   m_SynchronizeRotation: 1
   m_SynchronizeScale: 0
   m_UseLocal: 1
+--- !u!1 &8559620070921360518
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6390559914057841238}
+  m_Layer: 0
+  m_Name: ShotPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6390559914057841238
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8559620070921360518}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 17.38, y: 6.25, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1099013940867714522}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8569447280461704081
 GameObject:
   m_ObjectHideFlags: 0
@@ -5483,6 +5506,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 2246114082229239346}
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 442d3a7563e2e40458007db556fcec3e,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6390559914057841238}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 442d3a7563e2e40458007db556fcec3e,
         type: 3}
