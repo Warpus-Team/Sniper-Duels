@@ -682,6 +682,7 @@ MonoBehaviour:
   painelCodigoSala: {fileID: 1373666823}
   codigoSalaText: {fileID: 161889314}
   gameSceneName: TestePhoton
+  menuSceneName: Menu
 --- !u!1 &83411883
 GameObject:
   m_ObjectHideFlags: 0

@@ -24,6 +24,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks
 
     [Header("Configurações")]
     [SerializeField] private string gameSceneName;
+    [SerializeField] private string menuSceneName;
 
     //[Header("Status")]
     //[SerializeField] private TMP_Text statusText;
@@ -127,7 +128,10 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     public override void OnLeftRoom()
     {
         painelCodigoSala?.SetActive(false);
+
         Debug.Log("[Lobby] Saiu da sala.");
+        PhotonNetwork.JoinLobby();
+        UnityEngine.SceneManagement.SceneManager.LoadScene(menuSceneName);
     }
 
     // ─────────────────────────────────────────

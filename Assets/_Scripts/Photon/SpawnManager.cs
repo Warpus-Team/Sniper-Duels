@@ -37,7 +37,7 @@ public class SpawnManager : MonoBehaviourPunCallbacks
     // ─────────────────────────────────────────────────
     // Spawn inicial
     // ─────────────────────────────────────────────────
-    private void SpawnLocalPlayer()
+    public void SpawnLocalPlayer()
     {
         // ActorNumber 1 → [0] Team A1
         // ActorNumber 2 → [1] Team B1
@@ -116,6 +116,19 @@ public class SpawnManager : MonoBehaviourPunCallbacks
         }
 
         _localPlayer = null;
+    }
+
+    public void DespawnLocalPlayer()
+    {
+        if (_localPlayer == null) return;
+
+        _localPlayer.OnDeath_Server -= OnLocalPlayerDied;
+
+        if (_localPlayer.photonView != null && _localPlayer.photonView.IsMine)
+            PhotonNetwork.Destroy(_localPlayer.gameObject);
+
+        _localPlayer = null;
+        Debug.Log("[Spawn] Player local removido.");
     }
 
     private void OnLocalPlayerDied(Player deadPlayer)

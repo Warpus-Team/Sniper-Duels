@@ -26,9 +26,8 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     private List<PlayerHealth> _alivePlayers = new();
     private int _currentRound = 0;
-
-    // ← flag para evitar EndRound duplicado
     private bool _roundEnding = false;
+    private bool _waitingForPlayers = false;
 
     public GameState CurrentState { get; private set; } = GameState.WaitForPlayers;
 
@@ -40,10 +39,79 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     private void Start()
     {
-        // Apenas o MasterClient controla o fluxo de rodadas
         if (!PhotonNetwork.IsMasterClient) return;
-        
         StartCoroutine(StartRoundRoutine());
+    }
+
+    // ─────────────────────────────────────────
+    // Callbacks de jogadores entrando e saindo
+    // ─────────────────────────────────────────
+
+    public override void OnPlayerLeftRoom(Player otherPlayer)
+    {
+        if (!PhotonNetwork.IsMasterClient) return;
+
+        Debug.Log($"[Game] {otherPlayer.NickName} saiu da sala.");
+
+        // Para toda lógica de rodada
+        StopAllCoroutines();
+        _roundEnding = false;
+        _waitingForPlayers = true;
+
+        SetState(GameState.WaitForPlayers, _currentRound);
+        Debug.Log("[Game] Aguardando novo jogador...");
+    }
+
+    public override void OnPlayerEnteredRoom(Player newPlayer)
+    {
+        if (!PhotonNetwork.IsMasterClient) return;
+        if (PhotonNetwork.CurrentRoom.PlayerCount < 2) return;
+
+        Debug.Log($"[Game] {newPlayer.NickName} entrou. Reiniciando partida...");
+
+        _waitingForPlayers = false;
+
+        // Reset completo sincronizado para todos os clientes
+        photonView.RPC(nameof(RPC_ResetGame), RpcTarget.All);
+    }
+
+    // ─────────────────────────────────────────
+    // Reset completo — roda em TODOS os clientes
+    // ─────────────────────────────────────────
+
+    [PunRPC]
+    private void RPC_ResetGame()
+    {
+        Debug.Log("[Game] Reset completo iniciado.");
+        StartCoroutine(ResetGameRoutine());
+    }
+
+    private IEnumerator ResetGameRoutine()
+    {
+        // 1. Para qualquer lógica em andamento
+        _roundEnding = false;
+        _currentRound = 0;
+        _alivePlayers.Clear();
+
+        // 2. Destrói o player local atual
+        SpawnManager.Instance?.DespawnLocalPlayer();
+
+        // 3. Zera os placares (Custom Properties sincronizam automaticamente)
+        if (PhotonNetwork.IsMasterClient)
+            ScoreManager.Instance?.ResetAllScores();
+
+        // Aguarda o destroy processar
+        yield return new WaitForSeconds(1f);
+
+        // 4. Respawna o player local
+        SpawnManager.Instance?.SpawnLocalPlayer();
+
+        // 5. Aguarda o spawn completar
+        yield return new WaitForSeconds(2f);
+
+        // 6. Reinicia as rodadas — só MasterClient
+        if (PhotonNetwork.IsMasterClient)
+            StartCoroutine(StartRoundRoutine());
     }
 
     // ─────────────────────────────────────────
@@ -56,14 +124,12 @@ public class GameManager : MonoBehaviourPunCallbacks
         _currentRound++;
 
         Debug.Log($"[Game] Iniciando rodada {_currentRound}...");
-
         SetState(GameState.RoundRunning, _currentRound);
 
         yield return new WaitForSeconds(2f);
 
         RegisterAlivePlayers();
-
-        Debug.Log($"[Game] Rodada {_currentRound} iniciada com {_alivePlayers.Count} jogadores.");
+        Debug.Log($"[Game] Rodada {_currentRound} — {_alivePlayers.Count} jogadores registrados.");
     }
 
     private void RegisterAlivePlayers()
@@ -79,6 +145,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
         foreach (var p in allPlayers)
         {
+            // Remove antes de adicionar para garantir registro único
             p.OnDeath_Server -= OnPlayerDied;
             p.OnDeath_Server += OnPlayerDied;
             _alivePlayers.Add(p);
@@ -86,13 +153,14 @@ public class GameManager : MonoBehaviourPunCallbacks
     }
 
     // ─────────────────────────────────────────
-    // Morte de player
+    // Morte — só MasterClient processa
     // ─────────────────────────────────────────
 
     public void OnPlayerDied(Player deadPlayer)
     {
         if (!PhotonNetwork.IsMasterClient) return;
         if (_roundEnding) return;
+        if (_waitingForPlayers) return; // ← ignora mortes enquanto aguarda jogador
 
         _alivePlayers.RemoveAll(h =>
             h.photonView.Owner != null &&
@@ -100,7 +168,8 @@ public class GameManager : MonoBehaviourPunCallbacks
 
         Debug.Log($"[Game] {deadPlayer.NickName} morreu. Vivos: {_alivePlayers.Count}");
 
-        if (_alivePlayers.Count <= 1) { 
+        if (_alivePlayers.Count <= 1)
+        {
             _roundEnding = true;
             StartCoroutine(EndRoundRoutine());
         }
@@ -112,11 +181,9 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     private IEnumerator EndRoundRoutine()
     {
-        var _roundEndDelay = 1f;
-
         SetState(GameState.RoundEnd, _currentRound);
 
-        // Identifica o vencedor da rodada
+        // Identifica e pontua o vencedor da rodada
         if (_alivePlayers.Count == 1)
         {
             var roundWinner = _alivePlayers[0].photonView.Owner;
@@ -126,25 +193,22 @@ public class GameManager : MonoBehaviourPunCallbacks
 
         yield return new WaitForSeconds(roundEndDelay);
 
-        // Verifica se o jogo acabou ANTES de respawnar
+        // Verifica fim de jogo ANTES de respawnar
         if (_currentRound >= totalRounds)
         {
             SetState(GameState.GameEnd, _currentRound);
-            yield return new WaitForSeconds(_roundEndDelay);
+            yield return new WaitForSeconds(1f); // aguarda sync das Custom Properties
             AnnounceWinner();
             yield break;
         }
 
-        // Respawna os dois jogadores via RPC para garantir sincronização
-        if (photonView != null) {
+        // Respawna todos via RPC para sincronizar os dois clientes
+        if (photonView != null)
             photonView.RPC(nameof(RPC_RespawnAll), RpcTarget.All);
-        }
-        else {
+        else
             RPC_RespawnAll(); // fallback local
-        }
-        
-        yield return new WaitForSeconds(_roundEndDelay);
 
+        yield return new WaitForSeconds(0.5f);
         StartCoroutine(StartRoundRoutine());
     }
 
@@ -166,17 +230,27 @@ public class GameManager : MonoBehaviourPunCallbacks
     private void AnnounceWinner()
     {
         Player winner = ScoreManager.Instance?.GetWinner();
+
         if (winner == null)
         {
-            Debug.Log("[Game] Nenhum vencedor.");
+            Debug.Log("[Game] Nenhum vencedor encontrado.");
             return;
         }
+
         Debug.Log($"[Game] Vencedor final: {winner.NickName}");
         RoundResultUI.Instance?.ShowGameEnd(winner.NickName);
+
+        StartCoroutine(ReturnToMenuRoutine());
+    }
+
+    private IEnumerator ReturnToMenuRoutine()
+    {
+        yield return new WaitForSeconds(5f);
+        PhotonNetwork.LeaveRoom();
     }
 
     // ─────────────────────────────────────────
-    // Sync entre clientes
+    // Sync de estado entre clientes
     // ─────────────────────────────────────────
 
     private void SetState(GameState state, int round)
@@ -210,7 +284,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         if (!PhotonNetwork.IsMasterClient) return;
 
-        Debug.Log("[Game] Novo MasterClient assumiu. Reiniciando controle...");
+        Debug.Log("[Game] Novo MasterClient assumiu.");
 
         if (CurrentState == GameState.RoundRunning)
         {

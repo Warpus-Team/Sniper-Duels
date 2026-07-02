@@ -56,6 +56,19 @@ public class ScoreManager : MonoBehaviourPunCallbacks
         return winner;
     }
 
+    public void ResetAllScores()
+    {
+        foreach (Player p in PhotonNetwork.PlayerList)
+        {
+            p.SetCustomProperties(new Hashtable
+            {
+                { KEY_KILLS,  0 },
+                { KEY_DEATHS, 0 }
+            });
+        }
+        Debug.Log("[Score] Pontuações zeradas.");
+    }
+
     // Substitui scores.onChanged — Photon dispara em TODOS os clientes automaticamente
     public override void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProps)
     {
