@@ -292,7 +292,7 @@ MonoBehaviour:
   lookSensitivity: 2
   maxLookAngle: 80
   playerCamera: {fileID: 7691955102212479079}
-  animator: {fileID: 0}
+  animator: {fileID: 247337985258164525}
   renderers:
   - {fileID: 3091672133592810844}
   - {fileID: 1637859059892067171}
@@ -326,12 +326,18 @@ MonoBehaviour:
   range: 20
   damage: 10
   fireRate: 1
+  maxAmmo: 10
+  reloadTime: 2
+  weaponTransform: {fileID: 1099013940867714522}
+  reloadPosOffset: {x: 0, y: -0.3, z: 0.05}
+  reloadRotOffset: {x: 0, y: 0, z: -10}
   cameraTransform: {fileID: 2163256163081114567}
   muzzleTransform: {fileID: 6390559914057841238}
   hitLayer:
     serializedVersion: 2
     m_Bits: 183
   muzzleFlash: {fileID: 7813165524960938329}
+  animator: {fileID: 0}
 --- !u!114 &8446733859682181790
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5368,6 +5374,21 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9168669400996141725, guid: fce5eb4bdb35ced4bb80338521368254,
         type: 3}
+      propertyPath: m_SynchronizeParameters.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 9168669400996141725, guid: fce5eb4bdb35ced4bb80338521368254,
+        type: 3}
+      propertyPath: m_SynchronizeParameters.Array.data[3].Name
+      value: Reloading
+      objectReference: {fileID: 0}
+    - target: {fileID: 9168669400996141725, guid: fce5eb4bdb35ced4bb80338521368254,
+        type: 3}
+      propertyPath: m_SynchronizeParameters.Array.data[3].Type
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 9168669400996141725, guid: fce5eb4bdb35ced4bb80338521368254,
+        type: 3}
       propertyPath: m_SynchronizeParameters.Array.data[0].SynchronizeType
       value: 2
       objectReference: {fileID: 0}
@@ -5381,11 +5402,22 @@ PrefabInstance:
       propertyPath: m_SynchronizeParameters.Array.data[2].SynchronizeType
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 9168669400996141725, guid: fce5eb4bdb35ced4bb80338521368254,
+        type: 3}
+      propertyPath: m_SynchronizeParameters.Array.data[3].SynchronizeType
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fce5eb4bdb35ced4bb80338521368254, type: 3}
+--- !u!95 &247337985258164525 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 71486163727447904, guid: fce5eb4bdb35ced4bb80338521368254,
+    type: 3}
+  m_PrefabInstance: {fileID: 257620933661058637}
+  m_PrefabAsset: {fileID: 0}
 --- !u!137 &1637859059892067171 stripped
 SkinnedMeshRenderer:
   m_CorrespondingSourceObject: {fileID: 1524918160910187822, guid: fce5eb4bdb35ced4bb80338521368254,
@@ -5447,12 +5479,12 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 442d3a7563e2e40458007db556fcec3e,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.37590003
+      value: -0.489
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 442d3a7563e2e40458007db556fcec3e,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.225
+      value: 0.392
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 442d3a7563e2e40458007db556fcec3e,
         type: 3}
