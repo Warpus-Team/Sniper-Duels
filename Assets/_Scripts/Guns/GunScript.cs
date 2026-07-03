@@ -10,10 +10,10 @@ public class GunScript : MonoBehaviourPun
     [SerializeField] private float fireRate = 0.5f;
 
     [Header("Ammo System")]
-    [SerializeField] private int maxAmmo = 15;       // Capacidade máxima do carregador
+    [SerializeField] private int maxAmmo = 15;       // Capacidade mï¿½xima do carregador
     [SerializeField] private float reloadTime = 1.5f; // Quanto tempo demora a recarga em segundos
-    private int _currentAmmo;                         // Munição atual no pente
-    private bool _isReloading = false;                // Bloqueia ações enquanto recarrega
+    private int _currentAmmo;                         // Muniï¿½ï¿½o atual no pente
+    private bool _isReloading = false;                // Bloqueia aï¿½ï¿½es enquanto recarrega
 
     [Header("Procedural Animation (Relative)")]
     [SerializeField] private Transform weaponTransform;     // O objeto da arma em si que vai mexer
@@ -35,7 +35,7 @@ public class GunScript : MonoBehaviourPun
     {
         enabled = photonView.IsMine;
 
-        // Começa a partida com a arma carregada
+        // Comeï¿½a a partida com a arma carregada
         _currentAmmo = maxAmmo;
 
         if (photonView.IsMine)
@@ -44,12 +44,12 @@ public class GunScript : MonoBehaviourPun
 
     private void Update()
     {
-        // 1. Se estiver recarregando, não faz mais nada no Update (bloqueia tiro e nova recarga)
+        // 1. Se estiver recarregando, nï¿½o faz mais nada no Update (bloqueia tiro e nova recarga)
         if (_isReloading)
             return;
 
         // 2. Comando manual de recarga (Teclado R)
-        // Só recarrega se o pente não estiver cheio
+        // Sï¿½ recarrega se o pente nï¿½o estiver cheio
         if (Input.GetKeyDown(KeyCode.R) && _currentAmmo < maxAmmo)
         {
             StartCoroutine(ReloadAnimate());
@@ -60,21 +60,21 @@ public class GunScript : MonoBehaviourPun
         if (!Input.GetMouseButtonDown(0))
             return;
 
-        // 4. Verifica se tem munição. Se não tiver, força a recarga automática
+        // 4. Verifica se tem muniï¿½ï¿½o. Se nï¿½o tiver, forï¿½a a recarga automï¿½tica
         if (_currentAmmo <= 0)
         {
-            Debug.LogWarning("<b>[Arma]</b> Sem munição! Iniciando recarga automática.");
+            Debug.LogWarning("<b>[Arma]</b> Sem muniï¿½ï¿½o! Iniciando recarga automï¿½tica.");
             StartCoroutine(ReloadAnimate());
             return;
         }
 
-        // 5. Controla a cadência de tiro (Fire Rate)
+        // 5. Controla a cadï¿½ncia de tiro (Fire Rate)
         if (Time.unscaledTime < _lastFireTime + fireRate)
             return;
 
         _lastFireTime = Time.unscaledTime;
         _currentAmmo--;
-        Debug.Log($"<b>[Arma]</b> Tiro disparado! Munição restante: <color=cyan>{_currentAmmo}/{maxAmmo}</color>");
+        Debug.Log($"<b>[Arma]</b> Tiro disparado! Muniï¿½ï¿½o restante: <color=cyan>{_currentAmmo}/{maxAmmo}</color>");
 
         MainGameView.Instance?.UpdateShot(_currentAmmo, maxAmmo);
 
@@ -84,7 +84,7 @@ public class GunScript : MonoBehaviourPun
         // Desenha a linha de teste no Editor
         Debug.DrawRay(muzzleTransform.position, cameraTransform.forward * range, Color.red, 0.5f);
 
-        // Executa o cálculo físico do tiro
+        // Executa o cï¿½lculo fï¿½sico do tiro
         if (!Physics.Raycast(muzzleTransform.position, cameraTransform.forward, out var hit, range, hitLayer))
             return;
 
@@ -98,7 +98,7 @@ public class GunScript : MonoBehaviourPun
     {
         _isReloading = true;
 
-        // 1. Salva a posição e rotação LOCAIS exatas de onde a arma está AGORA
+        // 1. Salva a posiï¿½ï¿½o e rotaï¿½ï¿½o LOCAIS exatas de onde a arma estï¿½ AGORA
         Vector3 initialLocalPos = weaponTransform.localPosition;
         Quaternion initialLocalRot = weaponTransform.localRotation;
 
@@ -109,13 +109,13 @@ public class GunScript : MonoBehaviourPun
         float halfDuration = reloadTime / 2f; // 1.0 segundo para cada fase
         float elapsed = 0f;
 
-        // === FASE 1: ABAIXANDO A ARMA (0s até 1s) ===
+        // === FASE 1: ABAIXANDO A ARMA (0s atï¿½ 1s) ===
         while (elapsed < halfDuration)
         {
             elapsed += Time.deltaTime;
             float percent = elapsed / halfDuration;
 
-            // Interpola suavemente a posição e a rotação locais
+            // Interpola suavemente a posiï¿½ï¿½o e a rotaï¿½ï¿½o locais
             weaponTransform.localPosition = Vector3.Lerp(initialLocalPos, targetLocalPos, percent);
             weaponTransform.localRotation = Quaternion.Slerp(initialLocalRot, targetLocalRot, percent);
             yield return null;
@@ -125,14 +125,14 @@ public class GunScript : MonoBehaviourPun
         weaponTransform.localPosition = targetLocalPos;
         weaponTransform.localRotation = targetLocalRot;
 
-        // Pequena pausa teórica para simular a troca do pente (opcional)
+        // Pequena pausa teï¿½rica para simular a troca do pente (opcional)
         _currentAmmo = maxAmmo;
         MainGameView.Instance?.UpdateShot(_currentAmmo, maxAmmo);
 
-        // Reseta o cronômetro para a volta
+        // Reseta o cronï¿½metro para a volta
         elapsed = 0f;
 
-        // === FASE 2: VOLTANDO PARA A POSIÇÃO ORIGINAL (1s até 2s) ===
+        // === FASE 2: VOLTANDO PARA A POSIï¿½ï¿½O ORIGINAL (1s atï¿½ 2s) ===
         while (elapsed < halfDuration)
         {
             elapsed += Time.deltaTime;
@@ -162,5 +162,16 @@ public class GunScript : MonoBehaviourPun
     {
         if (muzzleFlash != null)
             muzzleFlash.Play();
+    }
+
+    public void ResetAmmo()
+    {
+        if (!photonView.IsMine) return;
+
+        _isReloading = false;
+        _currentAmmo = maxAmmo;
+        MainGameView.Instance?.UpdateShot(_currentAmmo, maxAmmo);
+
+        Debug.Log("[Arma] Municao recarregada para nova rodada.");
     }
 }

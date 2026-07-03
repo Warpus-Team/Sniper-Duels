@@ -45,8 +45,20 @@ public class LobbyManager : MonoBehaviourPunCallbacks
 
         painelCodigoSala?.SetActive(false);
 
-        if (!PhotonNetwork.IsConnected)
+        if (!PhotonNetwork.IsConnected) {
             PhotonNetwork.ConnectUsingSettings();
+        }
+         else if (PhotonNetwork.InLobby)
+        {
+            // Ja esta no lobby (voltou de uma partida)
+            Debug.Log("[Lobby] Ja esta no lobby.");
+        }
+        else
+        {
+            // Conectado mas nao no lobby — precisa entrar
+            Debug.Log("[Lobby] Ja conectado, entrando no lobby...");
+            PhotonNetwork.JoinLobby();
+        }
 
     }
 
@@ -130,7 +142,6 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         painelCodigoSala?.SetActive(false);
 
         Debug.Log("[Lobby] Saiu da sala.");
-        PhotonNetwork.JoinLobby();
         UnityEngine.SceneManagement.SceneManager.LoadScene(menuSceneName);
     }
 
@@ -187,10 +198,10 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     }
 
     // ─────────────────────────────────────────
-    // Utilitário
+    // Utilitario
     // ─────────────────────────────────────────
 
-    // Gera código no formato: PALAVRA-NÚMERO ex: SALA-4821
+    // Gera codigo no formato: PALAVRA-NUMERO ex: SALA-4821
     private string GerarCodigo()
     {
         string[] prefixos = { "SALA", "DUELO", "ARENA", "MIRA", "SNIPER" };

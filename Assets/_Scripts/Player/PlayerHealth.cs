@@ -144,7 +144,11 @@ public class PlayerHealth : MonoBehaviourPun, IPunObservable
             if (controller != null) controller.enabled = true;
 
             var gun = GetComponent<GunScript>();
-            if (gun != null) gun.enabled = true;
+            
+            if (gun != null) {
+                gun.enabled = true;
+                gun.ResetAmmo();
+            }
 
             MainGameView.Instance?.UpdateHealth(_health, maxHealth);
         }

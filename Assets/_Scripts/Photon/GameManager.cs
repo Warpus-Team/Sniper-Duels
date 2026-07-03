@@ -40,6 +40,9 @@ public class GameManager : MonoBehaviourPunCallbacks
     private void Start()
     {
         if (!PhotonNetwork.IsMasterClient) return;
+        
+        ScoreManager.Instance?.ResetAllScores();
+        
         StartCoroutine(StartRoundRoutine());
     }
 
