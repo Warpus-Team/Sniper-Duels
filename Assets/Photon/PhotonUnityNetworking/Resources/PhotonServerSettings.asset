@@ -41,6 +41,7 @@ MonoBehaviour:
   - RespawnSpaceship
   - RPC_ChangeHealth
   - RPC_NotifyDeath
+  - RPC_PlayShotEffect
   - RPC_HideBody
   - RPC_ShowBody
   - RPC_RespawnAll
