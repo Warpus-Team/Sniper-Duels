@@ -455,7 +455,7 @@ RectTransform:
   m_GameObject: {fileID: 69171696}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.5, y: 1, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1054486153}
@@ -463,8 +463,8 @@ RectTransform:
   m_Father: {fileID: 215122744}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -240.00003, y: 0}
+  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &69171698
@@ -496,7 +496,7 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
+  m_PixelsPerUnitMultiplier: 10
 --- !u!222 &69171699
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1000,16 +1000,16 @@ RectTransform:
   m_GameObject: {fileID: 252109774}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.5, y: 1, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 139325840}
   - {fileID: 278795153}
   m_Father: {fileID: 1452209296}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 240, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &252109776
@@ -1041,7 +1041,7 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
+  m_PixelsPerUnitMultiplier: 10
 --- !u!222 &252109777
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2032,17 +2032,17 @@ MonoBehaviour:
   painelRound: {fileID: 1452209295}
   roundTextRound: {fileID: 1873885041}
   resultTextRound: {fileID: 7403401}
-  nameATextRound: {fileID: 1776985872}
   scoreATextRound: {fileID: 159918898}
-  nameBTextRound: {fileID: 278795154}
   scoreBTextRound: {fileID: 139325841}
+  nameATextRound: {fileID: 1776985872}
+  nameBTextRound: {fileID: 278795154}
   painelGameEnd: {fileID: 215122743}
   roundTextGameEnd: {fileID: 400383466}
   resultTextGameEnd: {fileID: 1561608799}
-  nameATextGameEnd: {fileID: 641024867}
   scoreATextGameEnd: {fileID: 1054486154}
-  nameBTextGameEnd: {fileID: 751212083}
   scoreBTextGameEnd: {fileID: 612622238}
+  nameATextGameEnd: {fileID: 641024867}
+  nameBTextGameEnd: {fileID: 751212083}
   btnVoltarLobby: {fileID: 700723494}
   corVitoria: {r: 0.4, g: 0.6, b: 1, a: 1}
   corDerrota: {r: 1, g: 0.3, b: 0.3, a: 1}
@@ -2792,16 +2792,16 @@ RectTransform:
   m_GameObject: {fileID: 1534748667}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.5, y: 1, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 612622237}
   - {fileID: 751212082}
   m_Father: {fileID: 215122744}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 239.99988, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1534748669
@@ -2833,7 +2833,7 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
+  m_PixelsPerUnitMultiplier: 10
 --- !u!222 &1534748670
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3238,7 +3238,7 @@ RectTransform:
   m_GameObject: {fileID: 1856926215}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.5, y: 1, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 159918897}
@@ -3246,8 +3246,8 @@ RectTransform:
   m_Father: {fileID: 1452209296}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -240, y: 0}
+  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1856926217
@@ -3279,7 +3279,7 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
+  m_PixelsPerUnitMultiplier: 10
 --- !u!222 &1856926218
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3558,7 +3558,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2118964167}
   m_Layer: 0
-  m_Name: ElementsManagers
+  m_Name: ManagersManagers
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

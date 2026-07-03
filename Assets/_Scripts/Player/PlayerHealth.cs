@@ -119,8 +119,8 @@ public class PlayerHealth : MonoBehaviourPun, IPunObservable
         Player dead = GetPlayerByActor(deadActorNumber);
         Player killer = GetPlayerByActor(killerActorNumber);
 
-        ScoreManager.Instance?.AddKill(killer);
-        ScoreManager.Instance?.AddDeath(dead);
+        //ScoreManager.Instance?.AddKill(killer);
+        //ScoreManager.Instance?.AddDeath(dead);
 
         OnDeath_Server?.Invoke(dead);
         GameManager.Instance?.OnPlayerDied(dead);

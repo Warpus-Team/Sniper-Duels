@@ -60,6 +60,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
         SetState(GameState.WaitForPlayers, _currentRound);
         Debug.Log("[Game] Aguardando novo jogador...");
+
     }
 
     public override void OnPlayerEnteredRoom(Player newPlayer)
@@ -181,17 +182,47 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     private IEnumerator EndRoundRoutine()
     {
+        foreach (var p in _alivePlayers)
+            p.OnDeath_Server -= OnPlayerDied;
+
         SetState(GameState.RoundEnd, _currentRound);
+
+        string roundWinnerName = "";
 
         // Identifica e pontua o vencedor da rodada
         if (_alivePlayers.Count == 1)
         {
             var roundWinner = _alivePlayers[0].photonView.Owner;
+            roundWinnerName = roundWinner.NickName;
+
             ScoreManager.Instance?.AddKill(roundWinner);
-            Debug.Log($"[Game] {roundWinner.NickName} venceu a rodada {_currentRound}.");
+
+            foreach (var p in PhotonNetwork.PlayerList)
+                if (p.ActorNumber != roundWinner.ActorNumber)
+                    ScoreManager.Instance?.AddDeath(p);
+
+            Debug.Log($"[Game] {roundWinnerName} venceu a rodada {_currentRound}.");
         }
 
+        yield return new WaitForSeconds(1f);
+
+        // Lê o placar APÓS a propagação e passa diretamente via RPC
+        Player pA = GetPhotonPlayerByName("Player A");
+        Player pB = GetPhotonPlayerByName("Player B");
+        int killsA = pA != null ? ScoreManager.Instance.GetKills(pA) : 0;
+        int killsB = pB != null ? ScoreManager.Instance.GetKills(pB) : 0;
+
+
+        // Notifica a UI de resultado de rodada em TODOS os clientes via RPC
+        if (photonView != null)
+            photonView.RPC(nameof(RPC_ShowRoundResult), RpcTarget.All,
+                roundWinnerName, _currentRound, killsA, killsB);
+
         yield return new WaitForSeconds(roundEndDelay);
+
+        // Esconde o painel de rodada antes de respawnar
+        if (photonView != null)
+            photonView.RPC(nameof(RPC_HideRoundResult), RpcTarget.All);
 
         // Verifica fim de jogo ANTES de respawnar
         if (_currentRound >= totalRounds)
@@ -208,7 +239,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         else
             RPC_RespawnAll(); // fallback local
 
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(1f);
         StartCoroutine(StartRoundRoutine());
     }
 
@@ -237,8 +268,21 @@ public class GameManager : MonoBehaviourPunCallbacks
             return;
         }
 
+        Player pA = GetPhotonPlayerByName("Player A");
+        Player pB = GetPhotonPlayerByName("Player B");
+        int killsA = pA != null ? ScoreManager.Instance.GetKills(pA) : 0;
+        int killsB = pB != null ? ScoreManager.Instance.GetKills(pB) : 0;
+
         Debug.Log($"[Game] Vencedor final: {winner.NickName}");
-        RoundResultUI.Instance?.ShowGameEnd(winner.NickName);
+
+        // RPC para garantir que AMBOS os clientes vejam a tela de fim de jogo
+        if (photonView != null)
+            photonView.RPC(
+                nameof(RPC_ShowGameEnd), 
+                RpcTarget.All, 
+                winner.NickName, 
+                killsA, killsB
+            );
 
         StartCoroutine(ReturnToMenuRoutine());
     }
@@ -246,7 +290,19 @@ public class GameManager : MonoBehaviourPunCallbacks
     private IEnumerator ReturnToMenuRoutine()
     {
         yield return new WaitForSeconds(5f);
-        PhotonNetwork.LeaveRoom();
+
+        // Proteção: só sai se ainda estiver em sala
+        if (photonView != null)
+            photonView.RPC(nameof(RPC_LeaveRoom), RpcTarget.All);
+        else if (PhotonNetwork.InRoom)
+            PhotonNetwork.LeaveRoom();
+    }
+
+    [PunRPC]
+    private void RPC_LeaveRoom()
+    {
+        if (PhotonNetwork.InRoom)
+            PhotonNetwork.LeaveRoom();
     }
 
     // ─────────────────────────────────────────
@@ -255,6 +311,18 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     private void SetState(GameState state, int round)
     {
+        if (!PhotonNetwork.IsConnected)
+            return;
+
+        if (!PhotonNetwork.InRoom)
+            return;
+
+        if (PhotonNetwork.CurrentRoom == null)
+            return;
+
+        if (PhotonNetwork.NetworkClientState != ClientState.Joined)
+            return;
+
         CurrentState = state;
         if (!PhotonNetwork.IsMasterClient) return;
 
@@ -291,5 +359,30 @@ public class GameManager : MonoBehaviourPunCallbacks
             _roundEnding = false;
             RegisterAlivePlayers();
         }
+    }
+
+    [PunRPC]
+    private void RPC_ShowRoundResult(string winnerName, int round, int killsA, int killsB)
+    {
+        RoundResultUI.Instance?.ShowRoundEnd(winnerName, round, killsA, killsB);
+    }
+
+    [PunRPC]
+    private void RPC_HideRoundResult()
+    {
+        RoundResultUI.Instance?.HideRoundResult();
+    }
+
+    [PunRPC]
+    private void RPC_ShowGameEnd(string winnerName, int killsA, int killsB)
+    {
+        RoundResultUI.Instance?.ShowGameEnd(winnerName, killsA, killsB);
+    }
+
+    private Player GetPhotonPlayerByName(string nickname)
+    {
+        foreach (var p in PhotonNetwork.PlayerList)
+            if (p.NickName == nickname) return p;
+        return null;
     }
 }
