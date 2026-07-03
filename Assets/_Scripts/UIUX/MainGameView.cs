@@ -46,6 +46,9 @@ public class MainGameView : MonoBehaviourPun  // ← não herda mais de View
 
     public void UpdateShot(int currentShot, int maxShot)
     {
-        shotText.text = $"0 + {currentShot} / {maxShot}";
+        if (currentShot < 10)
+            shotText.text = $"0{currentShot} / {maxShot}";
+        else
+            shotText.text = $"{currentShot} / {maxShot}";
     }
 }

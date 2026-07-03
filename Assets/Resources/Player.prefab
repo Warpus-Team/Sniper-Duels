@@ -1636,7 +1636,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 4
   sprintSpeed: 7
-  jumpForce: 1
+  jumpForce: 1.5
   gravity: -13
   groundCheckDistance: 0.2
   lookSensitivity: 2
@@ -1674,7 +1674,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   range: 20
-  damage: 10
+  damage: 50
   fireRate: 1
   maxAmmo: 10
   reloadTime: 2
