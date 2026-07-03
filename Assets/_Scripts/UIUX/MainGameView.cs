@@ -7,10 +7,11 @@ public class MainGameView : MonoBehaviourPun  // ← não herda mais de View
 {
     public static MainGameView Instance { get; private set; } // ← singleton novo
 
-    [Header("Configuracoes do Texto")]
+    [Header("Configuracoes do Texto da Vida e do Tiro")]
     [SerializeField] private TMP_Text healthText;
-    
-    [Header("Configuracoes da Barrar")]
+    [SerializeField] private TMP_Text shotText;
+
+    [Header("Configuracoes da Barrar de Vida")]
     [SerializeField] private Slider healthSlider;
 
     [Header("Canvas")]
@@ -41,5 +42,10 @@ public class MainGameView : MonoBehaviourPun  // ← não herda mais de View
 
         healthSlider.maxValue = maxHealth;
         healthSlider.value = currentHealth;
+    }
+
+    public void UpdateShot(int currentShot, int maxShot)
+    {
+        shotText.text = $"0 + {currentShot} / {maxShot}";
     }
 }

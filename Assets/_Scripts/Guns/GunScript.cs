@@ -37,6 +37,9 @@ public class GunScript : MonoBehaviourPun
 
         // Começa a partida com a arma carregada
         _currentAmmo = maxAmmo;
+
+        if (photonView.IsMine)
+            MainGameView.Instance?.UpdateShot(_currentAmmo, maxAmmo);
     }
 
     private void Update()
@@ -72,6 +75,8 @@ public class GunScript : MonoBehaviourPun
         _lastFireTime = Time.unscaledTime;
         _currentAmmo--;
         Debug.Log($"<b>[Arma]</b> Tiro disparado! Munição restante: <color=cyan>{_currentAmmo}/{maxAmmo}</color>");
+
+        MainGameView.Instance?.UpdateShot(_currentAmmo, maxAmmo);
 
         // Executa os efeitos na rede
         photonView.RPC(nameof(RPC_PlayShotEffect), RpcTarget.All);
@@ -122,6 +127,7 @@ public class GunScript : MonoBehaviourPun
 
         // Pequena pausa teórica para simular a troca do pente (opcional)
         _currentAmmo = maxAmmo;
+        MainGameView.Instance?.UpdateShot(_currentAmmo, maxAmmo);
 
         // Reseta o cronômetro para a volta
         elapsed = 0f;
@@ -145,7 +151,12 @@ public class GunScript : MonoBehaviourPun
         _isReloading = false;
     }
 
-  
+    private void UpdateAmmoUI()
+    {
+        if (photonView.IsMine)
+            MainGameView.Instance?.UpdateShot(_currentAmmo, maxAmmo);
+    }
+
     [PunRPC]
     private void RPC_PlayShotEffect()
     {
